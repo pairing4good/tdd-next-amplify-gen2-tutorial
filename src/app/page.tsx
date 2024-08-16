@@ -1,3 +1,5 @@
-export default function Home() {
-  return <h1>TDD Next Template</h1>
+import NoteForm from "./noteForm";
+
+export default function App() {
+  return <NoteForm/>
 }
