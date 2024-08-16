@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders homepage unchanged 1`] = `
+<div>
+  <html
+    lang="en"
+  >
+    <body
+      class="className"
+    >
+      <h1>
+        TDD Next Template
+      </h1>
+    </body>
+  </html>
+</div>
+`;
