@@ -1,12 +1,35 @@
-![Security Checks](https://github.com/pairing4good/tdd-next-template/actions/workflows/codeql-analysis.yml/badge.svg)
-![Linting Checks](https://github.com/pairing4good/tdd-next-template/actions/workflows/linting.yml/badge.svg)
-![React Tests](https://github.com/pairing4good/tdd-next-template/actions/workflows/node.js.yml/badge.svg)
-![Cypress Tests](https://github.com/pairing4good/tdd-next-template/actions/workflows/cypress.yml/badge.svg)
+# TDD AWS Amplify React App - Step 1
 
-## Usage
+![Security Checks](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/actions/workflows/codeql-analysis.yml/badge.svg)
+![React Tests](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/actions/workflows/node.js.yml/badge.svg)
+![Cypress Tests](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/actions/workflows/cypress.yml/badge.svg)
 
-- Click the `Use this template` button on the top right
-- Click on `Settings > Code security and analysis`
+In this tutorial we will [test drive](https://en.wikipedia.org/wiki/Test-driven_development) a [React](https://reactjs.org/) app which will use [AWS Amplify](https://aws.amazon.com/amplify) to set up authentication and the backend API.
+ 
+## Approach
+Test driving an application often starts at the bottom of the [testing pyramid](https://martinfowler.com/bliki/TestPyramid.html) in [unit tests](https://en.wikipedia.org/wiki/Unit_testing). Unit tests focus on testing small units of code in isolation. However, this tutorial will start at the top of the pyramid with user interface (UI) testing. This approach is often called [Acceptance Test Driven Development](https://en.wikipedia.org/wiki/Acceptance_test%E2%80%93driven_development) (ATDD).
+
+There are a few benefits of starting at the top of the testing pyramid:
+
+1. Quick Feedback: Demonstrate a working system to the customer faster
+1. Customer Focus: Low level code clearly ties to high level customer value
+1. System Focus: The architecture evolves and expands on green.
+
+  
+## Set Up
+
+- Download and install [Visual Studio Code](https://code.visualstudio.com/)
+- Open VS Code and set up the ability to [launch VS Code from the terminal](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line)
+- Install [Node Version Manager](https://github.com/nvm-sh/nvm). `nvm` allows you to quickly install and use different versions of node via the command line.
+- Run `nvm install node` to install the latest version of node
+- Run `nvm use node` to use the latest version of node
+
+- If you haven't already, [create](https://docs.github.com/en/github/getting-started-with-github/signing-up-for-github/signing-up-for-a-new-github-account) a GitHub account
+
+- Use the [pairing4good/tdd-next-template](https://github.com/pairing4good/tdd-next-template) template.
+
+- Click the `Use this template` button on the top right of [pairing4good/tdd-next-template](https://github.com/pairing4good/tdd-next-template)
+- Click on `Settings > Code security and analysis` on your new repository
   - Enable `Dependabot alerts`
   - Enable `Dependabot security updates`
 - Update badges at the top of the `README.md` to point to your new repositories GitHub Action results
@@ -17,53 +40,259 @@
 ![Cypress Tests](https://github.com/{username}/{repository}/actions/workflows/cypress.yml/badge.svg)
 ```
 
-- [Clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) your new repository
 - Update the `name` of your application in the `package.json` file in the root of your repository
+
+- [Clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) your new repository
+
+ 
+## Big & Visible Progress
+
+Create a new [Project](https://docs.github.com/en/issues/planning-and-tracking-with-projects/creating-projects/creating-a-project) and [add it to your repository](https://docs.github.com/en/issues/planning-and-tracking-with-projects/managing-your-project/adding-your-project-to-a-repository).  Select the `Board` [layout](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/quickstart-for-projects#adding-a-board-layout).  As you add stories,  each story will be moved across the board from `ToDo` to `In Progress` to `Done`.  We show this progress so that anyone inside or outside the team can quickly see the progress that we are making.
+ 
+## README
+The `README.md` file is the first thing anyone sees when they open this repository.  It's important to update your readme to include the following:
+ 1. Title
+ 1. Description of your product
+ 1. Install and run instructions
+ 
+
+## First Test
+
+### Why: User Story
+
+```
+As a team member
+I want to capture a note
+So that I can refer back to it later
+```
+
+### What: User Acceptance Criteria
+
+```
+Given that no notes are entered
+When nothing is saved
+Then no notes should be listed
+```
+
+```
+Given that one note exists
+When a note is saved
+Then two notes should be listed
+```
+
+```
+Given a note exists
+When the application is opened
+Then a note is listed
+```
+ 
+### Add Story to Kanban Board
+Add this story to your [Kanban board](https://en.wikipedia.org/wiki/Kanban).  
+- Click the `+ Add item` link at the bottom of the `Todo` column
+- Enter the short description of `Capture Note`
+- Type `Enter`
+- Click on the story name `Capture Note`
+- Click the `Edit` link within the `description` section
+- Add the `As a`, `I want`, `So that` user story above
+- After the user story add an acceptance criteria section with the heading `Acceptance Criteria:`
+- Below that title add the `Given`, `When`, `Then` criteria
+- Click the `Update comment` button
+- Click the `x` button on the top right
+- Drag this new story from the `Todo` column into the `In Progress` column
+ 
+ This provides big and visible progress for everyone inside and outside the team.  Teams meet around this board [daily](https://en.wikipedia.org/wiki/Stand-up_meeting#Three_questions) to align, formulate a plan for the day, and make any impediments big and visible.
+
+### Red - Acceptance Test
+
+The user story and acceptance criteria above describe a desired customer outcome. The user acceptance test will link this narrative with a high level how. For this tutorial our first application will be a [web application](https://en.wikipedia.org/wiki/Web_application) built with [React](https://reactjs.org). The testing framework use to test this will be [Cypress](https://www.cypress.io)
+
+- Rename `cypress/e2e/app.cy.js` to `cypress/e2e/note.cy.js`
+- Open the `cypress/e2e/note.cy.js` file
+- Replace the contents of this file with the following
+
+```js
+beforeEach(() => {
+  cy.visit('/');
+});
+
+describe('Note Capture', () => {
+  it('should create a note when name and description provided', () => {
+    cy.get('[data-testid=note-name-field]').type('test note');
+    cy.get('[data-testid=note-description-field]').type('test note description');
+    cy.get('[data-testid=note-form-submit]').click();
+
+    cy.get('[data-testid=test-name-0]').should('have.text', 'test note');
+    cy.get('[data-testid=test-description-0]').should('have.text', 'test note description');
+  });
+});
+```
+
 - Run `npm install`
+- Run `npm run cypress:test`
 
-## Approach
+- These commands are looking for elements on a webpage that contains a `data-testid` attribute with the value that follows the `=`. We now have a failing acceptance test.
 
-This starter template bootstraps your repository with coding standards, industry best practices and detects security vulnerabilities. This template provides fast code analysis and automated testing feedback loops so you can focus on solving problems.
+```
+Timed out retrying after 4000ms: Expected to find element: [data-testid=note-name-field], but never found it.
+```
 
-## Code Analysis
+- Our objective now is to make this test go green (pass) in as few steps as possible. The goal is not to build a perfectly designed application but rather to make this go green and then [refactor](https://en.wikipedia.org/wiki/Code_refactoring) the architecture through small incremental steps.
 
-This template uses [ESLint](https://nextjs.org/docs/pages/building-your-application/configuring/eslint) to analyze the code in this repository. 
+### Green - Acceptance Test
 
-To run [ESLint](https://eslint.org/) run the command `npm run lint`. [ESLint](https://eslint.org/) can also automatically fix problems by running `npm run lint:fix`.
+The first step to making this failing test go green is adding an element with one of the `data-testid`'s to the `src/App.js` file.
 
-If you are using [VSCode](https://code.visualstudio.com/) adding the ESLint (dbaeumer.vscode-eslint) plugin provides live feedback as you are writing code.  Faster feedback loops help team members learn team style guidelines faster and avoid delays while committing.
+```js
+import './App.css';
 
-## Credentials Check
+function App() {
+  return (
+    <div className="App">
+      <input data-testid="note-name-field" />
+    </div>
+  );
+}
 
-It's all too common for developers to accidentally commit usernames and or passwords into their repository. This can lead to significant security vulnerabilities and even lead to security breaches. [Secretlint](https://github.com/secretlint/secretlint) is a pluggable linting tool that prevents developers from committing their credentials. [Secretlint](https://github.com/secretlint/secretlint) is configured in the `.secretlintrc.json` file at the root of this repository.
+export default App;
+```
 
-To run [Secretlint](https://github.com/secretlint/secretlint) run the command `npm run secretlint`.
+- Now the Cypress test fails on the second field
 
-## Testing Pyramid
-Products that are [test driven](https://en.wikipedia.org/wiki/Test-driven_development) have lower [defect](https://en.wikipedia.org/wiki/Software_bug) rates.  Teams that distribute test coverage according to the [testing pyramid](https://martinfowler.com/bliki/TestPyramid.html) build products that are easier to change.  The `App.test.js` test uses the [React Test Renderer](https://reactjs.org/docs/test-renderer.html) which uses the [React](https://reactjs.org/) framework to render a [Component](https://reactjs.org/docs/react-component.html).  The use of [React Test Renderer](https://reactjs.org/docs/test-renderer.html) [integrates](https://martinfowler.com/bliki/IntegrationTest.html) the framework's rendering capabilities with the plain `App.js` component.  Therefore, this test fits in the middle of the pyramid.  These tests are a bit slower and more costly to maintain than completely isolated [unit tests](https://martinfowler.com/bliki/UnitTest.html) at the bottom of the [testing pyramid](https://martinfowler.com/bliki/TestPyramid.html).  
+```
+Timed out retrying after 4000ms: Expected to find element: [data-testid=note-description-field], but never found it.
+```
 
-[Cypress](https://www.cypress.io/) tests fit at the top of the [testing pyramid](https://martinfowler.com/bliki/TestPyramid.html).  They are the slowest to run and the most expensive to write, run and maintain.  Nevertheless, these tests are vital for the success of any healthy product.  Teams should limit these tests to 5 - 10 of the most common [happy paths](https://en.wikipedia.org/wiki/Happy_path) through the product.  To run [Cypress](https://www.cypress.io/) test open a terminal window and run `npm start` to start the application.  Once the application is started, open a second terminal window and run `npm run cypress:run`.  If you wish to use the [Cypress Launchpad](https://docs.cypress.io/guides/getting-started/opening-the-app) run `npm run cypress:open` instead.
+- Add the next `input` field and rerun the test
+- Now the Cypress test fails on the submit button
 
-## Code Coverage
+```
+Timed out retrying after 4000ms: Expected to find element: [data-testid=note-form-submit], but never found it.
+```
 
-Test automation is essential for longterm product health. Each test exercises the application and ensures that it behaves the way that the customer expects. As products grow it's not uncommon to have tens of thousands of [unit tests](https://martinfowler.com/bliki/UnitTest.html) that run in a few milliseconds. Beyond [unit tests](https://martinfowler.com/bliki/UnitTest.html) teams invest in [integration tests](https://martinfowler.com/bliki/IntegrationTest.html) and [user interface testing](https://martinfowler.com/bliki/TestPyramid.html). Teams that are committed to [test driving](https://en.wikipedia.org/wiki/Test-driven_development) code often write thoughtful tests that provide comprehensive product test coverage.
+- Add the `button` element with the expected `data-testid`
 
-Code coverage verification can be useful for teams to identify test coverage holes within their product. These thresholds simply identify if a line of code was exercised by a test. However, it cannot determine if the test coverage is exercising the code in a meaningful way. Code coverage thresholds only identify test coverage gaps and should not be used as a substitute for a strong team culture of [test driving](https://en.wikipedia.org/wiki/Test-driven_development) code.
+```js
+<input data-testid="note-name-field"/>
+<input data-testid="note-description-field"/>
+<button data-testid="note-form-submit" type="button">
+    Submit
+</button>
+```
 
-This repository uses the [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/). By default [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) is configured to use [Jest](https://jestjs.io/) under the hood. Within [Jest](https://jestjs.io/), [test coverage thresholds](https://jestjs.io/docs/configuration#coveragethreshold-object) are set in the `jest.config.js` file at the root of this repository.
+- Now the Cypress test fails on the missing list of created notes
 
-[Cypress](https://www.cypress.io/) tests are not included in code coverage metrics.  End-to-end, full-stack integration tests often touch significant amounts of code without providing the level of coverage that thoughtful unit or integration tests provide lower in the testing pyramid.  While they serve a crucial role in holistic testing, they don't contribute to test coverage calculations.
+```
+Timed out retrying after 4000ms: Expected to find element: [data-testid=test-name-0], but never found it.
+```
 
-## Checks Before Committing
+In test driven development we do the simplest thing possible to make a test go green. Once it is green then and only then do we go back and refactor it. In this case, the simplest thing that we can do is hard-code the expected values on the screen.
 
-This template uses [Husky](https://typicode.github.io/husky) to verify the code before it’s committed to [git](https://git-scm.com/). The `.husky/pre-commit` file is run before a `git commit` is completed.
+```js
+<input data-testid="note-name-field"/>
+<input data-testid="note-description-field"/>
+<button data-testid="note-form-submit" type="button">
+    Submit
+</button>
+<p data-testid="test-name-0">test note</p>
+```
 
-Before each commit, [Husky](https://typicode.github.io/husky) checks for secrets within the code.  If a secret is found it will stop the commit and will require the secret to be removed from the commit.  Committing secrets is a very common mistake and must be avoided.
+- Now the Cypress test fails on the note description
 
-## Continuous Integration Builds
-This template uses [GitHub Actions](https://docs.github.com/en/actions) to run [continuous integration](https://en.wikipedia.org/wiki/Continuous_integration) builds after each push and pull request within GitHub.
+```
+Timed out retrying after 4000ms: Expected to find element: [data-testid=test-description-0], but never found it.
+```
 
-- `.github/workflows/codeql-analysis.yml` sets up [code scanning](https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning) for your repository.
-- `.github/workflows/node.js.yml` runs tests against your code.
-- `.github/workflows/cypress.yml` runs cypress tests against your code.
-- `.github/workflows/linting.yml` runs [ESLint](https://nextjs.org/docs/pages/building-your-application/configuring/eslint) against the code along with [secretlint](https://github.com/secretlint/secretlint)
+- Add the final element for `test-description-0`
+
+```js
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <input data-testid="note-name-field" />
+      <input data-testid="note-description-field" />
+      <button data-testid="note-form-submit" type="button">
+        Submit
+      </button>
+      <p data-testid="test-name-0">test note</p>
+      <p data-testid="test-description-0">test note description</p>
+    </div>
+  );
+}
+
+export default App;
+```
+
+- While this is far from a useful application, this application can be:
+  1. refactored on green
+  2. used to get feedback from the customer
+
+### Refactor - Acceptance Test
+
+> Refactoring is a disciplined technique for restructuring an existing body of code, altering its internal structure without changing its external behavior. - Martin Fowler
+
+The key to refactoring is to not change its "external behavior". In other words, after every change we make the test must remain green.
+
+One "internal structure" change that could help, is pulling this form out into a [react component](https://reactjs.org/docs/thinking-in-react.html#step-1-break-the-ui-into-a-component-hierarchy) so that we can drive these changes independently. Eventually `App.js` will have several components:
+
+```js
+<div className="App">
+  <Header />
+  <NoteForm />
+  <NoteList />
+  <Footer />
+</div>
+```
+
+So let's pull out a `NoteForm` component.
+
+- Create a new file called `NoteForm.js` in the `src` directory
+
+```js
+function NoteForm() {
+  return <div>//your form goes here</div>;
+}
+
+export default NoteForm;
+```
+
+- This is a [React functional component](https://reactjs.org/docs/components-and-props.html#function-and-class-components)
+- The `export default` is the way to [export](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export) only one object in [ES6](https://en.wikipedia.org/wiki/ECMAScript)
+
+- Copy the form from `App.js` and paste it into the `div` in `NoteForm.js`
+
+```js
+<div>
+  <input data-testid="note-name-field" />
+  <input data-testid="note-description-field" />
+  <button data-testid="note-form-submit" type="button">
+    Submit
+  </button>
+  <p data-testid="test-name-0">test note</p>
+  <p data-testid="test-description-0">test note description</p>
+</div>
+```
+
+- Replace the form contents in `App.js` with `<NoteForm />` and add an import for the `NoteForm`
+
+```js
+import './App.css';
+import NoteForm from './NoteForm';
+
+function App() {
+  return (
+    <div className="App">
+      <NoteForm />
+    </div>
+  );
+}
+
+export default App;
+```
+
+- Rerun you Cypress test and it is green
+
+Congratulations, you've successfully made an internal structural change "without changing its external behavior" (Refactoring).
+
+[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/002-step)
