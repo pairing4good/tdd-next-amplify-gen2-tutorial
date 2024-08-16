@@ -9,8 +9,8 @@ Before we show this new form to our customer we need to test drive:
 - the button's name
 - helpful input descriptions
 
-- First create a `test` directory in the `src` directory
-- Create a file called `NoteForm.test.js` in the new `test` directory
+- First create a `app` directory in the `src/__tests__` directory
+- Create a file called `noteForm.test.jsx` in the new `src/__tests__/app` directory
 
 ### Button Test
 
@@ -25,8 +25,8 @@ test('should display a create note button', () => {});
 - Now we will add a test that renders the component and asserts that the button is labeled "Create Note". For more information on the React Testing Library visit https://testing-library.com/docs
 
 ```js
+import NoteForm from '@/app/noteForm';
 import { render, screen } from '@testing-library/react';
-import NoteForm from '../NoteForm';
 
 test('should display a create note button', () => {
   render(<NoteForm />);
@@ -103,6 +103,9 @@ test('should display the description placeholder', () => {
 Every test starts with `render(<NoteForm />)`. Let's extract this duplicated set up code and place it in the test setup.
 
 ```js
+import NoteForm from '@/app/noteForm';
+import { render, screen } from '@testing-library/react';
+
 beforeEach(() => {
   render(<NoteForm />);
 });
@@ -111,6 +114,18 @@ test('should display a create note button', () => {
   const button = screen.getByTestId('note-form-submit');
 
   expect(button).toHaveTextContent('Create Note');
+});
+
+test('should display the name placeholder', () => {
+  const input = screen.getByTestId('note-name-field');
+
+  expect(input).toHaveAttribute('placeholder', 'Note Name');
+});
+
+test('should display the description placeholder', () => {
+  const input = screen.getByTestId('note-description-field');
+
+  expect(input).toHaveAttribute('placeholder', 'Note Description');
 });
 ```
 
