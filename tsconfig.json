@@ -13,7 +13,7 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
-    "types": ["@testing-library/jest-dom" ],
+    "types": ["@testing-library/jest-dom", "cypress"],
     "plugins": [
       {
         "name": "next"

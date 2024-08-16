@@ -18,6 +18,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "cypress": "^13.13.3",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18"
