@@ -141,20 +141,16 @@ Timed out retrying after 4000ms: Expected to find element: [data-testid=note-nam
 
 ### Green - Acceptance Test
 
-The first step to making this failing test go green is adding an element with one of the `data-testid`'s to the `src/App.js` file.
+The first step to making this failing test go green is adding an element with one of the `data-testid`'s to the `src/app/page.tsx` file.
 
 ```js
-import './App.css';
-
-function App() {
+export default function App() {
   return (
-    <div className="App">
+    <>
       <input data-testid="note-name-field" />
-    </div>
+    </>
   );
 }
-
-export default App;
 ```
 
 - Now the Cypress test fails on the second field
@@ -206,11 +202,9 @@ Timed out retrying after 4000ms: Expected to find element: [data-testid=test-des
 - Add the final element for `test-description-0`
 
 ```js
-import './App.css';
-
-function App() {
+export default function App() {
   return (
-    <div className="App">
+    <>
       <input data-testid="note-name-field" />
       <input data-testid="note-description-field" />
       <button data-testid="note-form-submit" type="button">
@@ -218,11 +212,9 @@ function App() {
       </button>
       <p data-testid="test-name-0">test note</p>
       <p data-testid="test-description-0">test note description</p>
-    </div>
+    </>
   );
 }
-
-export default App;
 ```
 
 - While this is far from a useful application, this application can be:
@@ -235,24 +227,24 @@ export default App;
 
 The key to refactoring is to not change its "external behavior". In other words, after every change we make the test must remain green.
 
-One "internal structure" change that could help, is pulling this form out into a [react component](https://reactjs.org/docs/thinking-in-react.html#step-1-break-the-ui-into-a-component-hierarchy) so that we can drive these changes independently. Eventually `App.js` will have several components:
+One "internal structure" change that could help, is pulling this form out into a [react component](https://reactjs.org/docs/thinking-in-react.html#step-1-break-the-ui-into-a-component-hierarchy) so that we can drive these changes independently. Eventually `src/app/page.tsx` will have several components:
 
 ```js
-<div className="App">
+<>
   <Header />
   <NoteForm />
   <NoteList />
   <Footer />
-</div>
+</>
 ```
 
 So let's pull out a `NoteForm` component.
 
-- Create a new file called `NoteForm.js` in the `src` directory
+- Create a new file called `noteForm.tsx` in the `src/app` directory
 
 ```js
 function NoteForm() {
-  return <div>//your form goes here</div>;
+  return <>//your form goes here</>;
 }
 
 export default NoteForm;
@@ -261,10 +253,10 @@ export default NoteForm;
 - This is a [React functional component](https://reactjs.org/docs/components-and-props.html#function-and-class-components)
 - The `export default` is the way to [export](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export) only one object in [ES6](https://en.wikipedia.org/wiki/ECMAScript)
 
-- Copy the form from `App.js` and paste it into the `div` in `NoteForm.js`
+- Copy the form from `src/app/page.tsx` and paste it into the `div` in `NoteForm.js`
 
-```js
-<div>
+```ts
+<>
   <input data-testid="note-name-field" />
   <input data-testid="note-description-field" />
   <button data-testid="note-form-submit" type="button">
@@ -272,24 +264,17 @@ export default NoteForm;
   </button>
   <p data-testid="test-name-0">test note</p>
   <p data-testid="test-description-0">test note description</p>
-</div>
+</>
 ```
 
-- Replace the form contents in `App.js` with `<NoteForm />` and add an import for the `NoteForm`
+- Replace the form contents in `src/app/page.tsx` with `<NoteForm />` and add an import for the `NoteForm`
 
 ```js
-import './App.css';
-import NoteForm from './NoteForm';
+import NoteForm from "./noteForm";
 
-function App() {
-  return (
-    <div className="App">
-      <NoteForm />
-    </div>
-  );
+export default function App() {
+  return <NoteForm/>
 }
-
-export default App;
 ```
 
 - Rerun you Cypress test and it is green
