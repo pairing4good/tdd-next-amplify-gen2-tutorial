@@ -18,12 +18,12 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "cypress": "^13.13.3",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "cypress": "^13.13.3",
     "@secretlint/secretlint-rule-preset-recommend": "^5.2.4",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "15.0.6",
