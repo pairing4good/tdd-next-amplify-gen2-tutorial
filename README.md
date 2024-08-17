@@ -253,7 +253,7 @@ export default NoteForm;
 - This is a [React functional component](https://reactjs.org/docs/components-and-props.html#function-and-class-components)
 - The `export default` is the way to [export](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export) only one object in [ES6](https://en.wikipedia.org/wiki/ECMAScript)
 
-- Copy the form from `src/app/page.tsx` and paste it into the `div` in `NoteForm.js`
+- Copy the form from `src/app/page.tsx` and paste it into the `<></>` in `NoteForm.js`
 
 ```ts
 <>
