@@ -52,7 +52,7 @@ Received:
 ```
 
 - The test automatically reruns once the change is saved. This is accomplished through jest's [watch](https://jestjs.io/docs/cli) mode.
-- **Be sure to always commit on green**. We value working code. `Green Code = Working Code`
+- **Be sure to always [commit](https://code.visualstudio.com/docs/sourcecontrol/intro-to-git#_staging-and-committing-code-changes) on green**. We value working code. `Green Code = Working Code`
 
 ### Name Input Test
 
