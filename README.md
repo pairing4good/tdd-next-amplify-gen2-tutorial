@@ -9,11 +9,9 @@ Before we show this new form to our customer we need to test drive:
 - the button's name
 - helpful input descriptions
 
+### Button Test
 - First create a `app` directory in the `src/__tests__` directory
 - Create a file called `noteForm.test.jsx` in the new `src/__tests__/app` directory
-
-### Button Test
-
 - In this new test file add a test that will drive the button name
 
 ```js
