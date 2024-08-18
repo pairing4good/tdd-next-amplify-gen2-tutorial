@@ -49,7 +49,7 @@ There are a number of ways that we could make this go green but React [Hooks](ht
 
 - Add `"use client"` at the top of this [client component](https://nextjs.org/docs/app/building-your-application/rendering/client-components) in order to use [React Hooks within Next.js](https://nextjs.org/docs/app/building-your-application/rendering/client-components)
 - Import the `useState` hook at the top of `src/app/page.tsx`
-- Initialize an empty list of notes inside the `App` function
+- Initialize an empty [array](https://www.typescriptlang.org/docs/handbook/basic-types.html#array) of notes inside the `App` function
 
 ```js
 "use client"
@@ -59,6 +59,31 @@ import NoteForm from "./noteForm";
 
 export default function App() {
   const [notes] = useState([]);
+
+  return <NoteForm notes={notes} />
+}
+```
+In [TypeScript](https://www.typescriptlang.org/) [arrays](https://www.typescriptlang.org/docs/handbook/basic-types.html#array) should have a type.  The `notes` will represent a note with a name and a description.  This structure can be represented in an [interface](https://www.typescriptlang.org/docs/handbook/2/objects.html).
+
+- In order to share the `Notes` interface throughout the application create a new file named `types.ts` inside the `src/app` folder.
+
+```js
+export interface Note {
+  name: string;
+  description: string;
+}
+```
+
+- Now let's update the `useState` to use this new `Note` type.  This is accomplished through TypeScript [generics](https://www.typescriptlang.org/docs/handbook/2/generics.html).
+
+```js
+"use client"
+
+import React, { useState } from 'react';
+import NoteForm from "./noteForm";
+
+export default function App() {
+  const [notes, setNotes] = useState<Note[]>([]);
 
   return <NoteForm notes={notes} />
 }
@@ -73,16 +98,13 @@ export default function App() {
 - Now in `noteForm.js` use the notes property that was passed to it to list the existing notes
 
 ```js
-interface Note {
-  name: string;
-  description: string;
-}
+import { Note } from "./types";
 
-interface Notes {
+interface Parameters {
   notes: Note[];
 }
 
-export default function NoteForm({ notes }: Notes) {
+export default function NoteForm({ notes }: Parameters) {
 
   return (
     <>
@@ -111,17 +133,17 @@ export default function NoteForm({ notes }: Notes) {
 - To achieve this we will need to add more state hooks
 
 ```js
-const [notes, setNotes] = useState([]);
-const [formData, setFormData] = useState({ name: '', description: '' });
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [formData, setFormData] = useState<Note>({ name: '', description: '' });
 ```
 
 - Now we need to pass these hooks to the `NoteForm` component
 
 ```js
   return <NoteForm 
-    notes={notes}
+    notes={notes} 
     formData={formData}
-    setFormDataCallback={setFormData}
+    setFormDataCallback={setFormData} 
     setNotesCallback={setNotes}
   />
 ```
@@ -131,37 +153,38 @@ Using these variables and callback functions can be a bit overwhelming so we wil
 - Add an `onChange` attribute to the `note-name-field` element
 
 ```js
-import PropTypes from 'prop-types';
+import { Note } from "./types";
 
-function NoteForm(props) {
-  const { notes, setFormDataCallback, formData } = props;
+interface Parameters {
+  notes: Note[];
+  formData: Note;
+  setFormDataCallback: (data: Note) => void;
+  setNotesCallback: (notes: Note[]) => void;
+}
 
+export default function NoteForm({
+  notes,
+  formData,
+  setFormDataCallback,
+  setNotesCallback,
+}: Parameters) {
   return (
-    <div>
+    <>
       <input
         data-testid="note-name-field"
         onChange={(e) =>
           setFormDataCallback({
             ...formData,
-            name: e.target.value
+            name: e.target.value,
           })
         }
         placeholder="Note Name"
       />
       ...
-    </div>
+    </>
   );
 }
 
-NoteForm.propTypes = {
-  notes: PropTypes.arrayOf(
-    PropTypes.shape({ name: PropTypes.string, description: PropTypes.string })
-  ).isRequired,
-  setFormDataCallback: PropTypes.func.isRequired,
-  formData: PropTypes.shape({ name: PropTypes.string, description: PropTypes.string }).isRequired
-};
-
-export default NoteForm;
 ```
 
 - **When `...` is on a line by itself, in a code example, it means that I have not provided all of the code from that file. Please be careful to copy each section that is separated by `...`'s and use them in the appropriate part of your files.**
@@ -175,16 +198,16 @@ export default NoteForm;
 - Add an `onChange` attribute to the `note-description-field` element
 
 ```js
-<input
-  data-testid="note-description-field"
-  onChange={(e) =>
-    setFormDataCallback({
-      ...formData,
-      description: e.target.value
-    })
-  }
-  placeholder="Note Description"
-/>
+      <input
+        data-testid="note-description-field"
+        onChange={(e) =>
+          setFormDataCallback({
+            ...formData,
+            description: e.target.value,
+          })
+        }
+        placeholder="Note Description"
+      />
 ```
 
 - This is exactly the same as the name `onChange` function with the exception of the target value's field name `'description'`.
@@ -192,32 +215,13 @@ export default NoteForm;
 - Add an `onClick` attribute to the `note-form-submit` element
 
 ```js
-import PropTypes from 'prop-types';
-
-function NoteForm(props) {
-  const { notes, setFormDataCallback, formData, setNotesCallback } = props;
-
-  return (
-    <div>
-      ...
       <button
         data-testid="note-form-submit"
         type="button"
-        onClick={() => setNotesCallback([...notes, formData])}>
+        onClick={() => setNotesCallback([...notes, formData])}
+      >
         Create Note
       </button>
-      ...
-    </div>
-  );
-}
-
-NoteForm.propTypes = {
-  ...
-  setNotesCallback: PropTypes.func.isRequired,
-  ...
-};
-
-export default NoteForm;
 ```
 
 - The `onClick` function is called every time the `Create Note` button is clicked
@@ -234,11 +238,17 @@ TypeError: Cannot read property 'map' of undefined
 
 ```js
 beforeEach(() => {
-  render(<NoteForm notes={[]} />);
+
+  render(<NoteForm
+      notes={[]}
+      formData={{name: '', description: ''}}
+      setFormDataCallback={jest.fn()}
+      setNotesCallback={jest.fn()}
+    />);
 });
 ```
 
-- The simplest thing that you can do is pass an empty array to `NoteForm`. And the tests pass.
+- The `jest.fn()` is a [Mock Function](https://jestjs.io/docs/mock-functions) that conforms to the defined parameter types through [Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html).
 
 - All of our tests are Green!
 - Don't forget to commit your changes
