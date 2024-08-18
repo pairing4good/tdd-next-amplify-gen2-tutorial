@@ -102,12 +102,7 @@ export default function NoteForm({ notes }: Notes) {
 }
 ```
 
-While this satisfied the first acceptance criteria, now the second acceptance criteria fails.
-
-```
-expected [data-testid=test-name-0] to have text test note, but the text was ''
-```
-
+- Next let's save notes
 - In order to save notes you must
 
 1. Save the note name and description form data when each field is changed
