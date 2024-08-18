@@ -71,7 +71,7 @@ export default function App() {
   return <NoteForm notes={notes} />
 ```
 
-- Now in `NoteForm.js` use the notes property that was passed to it to list the existing notes
+- Now in `noteForm.js` use the notes property that was passed to it to list the existing notes
 
 ```js
 import PropTypes from 'prop-types';
