@@ -243,11 +243,9 @@ So let's pull out a `NoteForm` component.
 - Create a new file called `noteForm.tsx` in the `src/app` directory
 
 ```js
-function NoteForm() {
+export default function NoteForm() {
   return <>//your form goes here</>;
 }
-
-export default NoteForm;
 ```
 
 - This is a [React functional component](https://reactjs.org/docs/components-and-props.html#function-and-class-components)
