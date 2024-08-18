@@ -47,7 +47,7 @@ it('should create a note when name and description provided', () => {
 
 There are a number of ways that we could make this go green but React [Hooks](https://react.dev/reference/react/useState) are one of the simplest ways to achieve this outcome.
 
-- Import the `useState` hook at the top of `App.js`
+- Import the `useState` hook at the top of `src/app/page.tsx`
 
 ```js
 import React, { useState } from 'react';
