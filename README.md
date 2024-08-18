@@ -47,21 +47,20 @@ it('should create a note when name and description provided', () => {
 
 There are a number of ways that we could make this go green but React [Hooks](https://react.dev/reference/react/useState) are one of the simplest ways to achieve this outcome.
 
+- Add `"use client"` at the top of this [client component](https://nextjs.org/docs/app/building-your-application/rendering/client-components) in order to use [React Hooks within Next.js](https://nextjs.org/docs/app/building-your-application/rendering/client-components)
 - Import the `useState` hook at the top of `src/app/page.tsx`
-
-```js
-import React, { useState } from 'react';
-```
-
 - Initialize an empty list of notes inside the `App` function
 
 ```js
+"use client"
+
+import React, { useState } from 'react';
 import NoteForm from "./noteForm";
 
 export default function App() {
   const [notes] = useState([]);
 
-  return <NoteForm/>
+  return <NoteForm notes={notes} />
 }
 ```
 
@@ -74,10 +73,16 @@ export default function App() {
 - Now in `noteForm.js` use the notes property that was passed to it to list the existing notes
 
 ```js
-import PropTypes from 'prop-types';
+interface Note {
+  name: string;
+  description: string;
+}
 
-function NoteForm(props) {
-  const { notes } = props;
+interface Notes {
+  notes: Note[];
+}
+
+export default function NoteForm({ notes }: Notes) {
 
   return (
     <>
@@ -95,15 +100,7 @@ function NoteForm(props) {
     </>
   );
 }
-
-NoteForm.propTypes = {
-  notes: PropTypes.arrayOf(PropTypes.string).isRequired
-};
-
-export default NoteForm;
 ```
-
-_Note: [Typechecking With PropTypes](https://reactjs.org/docs/typechecking-with-proptypes.html) is a recommended practice for components that take parameters. As your app grows, typechecking will help prevent alot of issues._
 
 While this satisfied the first acceptance criteria, now the second acceptance criteria fails.
 
