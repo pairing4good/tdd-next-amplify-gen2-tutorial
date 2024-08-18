@@ -45,7 +45,7 @@ it('should create a note when name and description provided', () => {
 - Run `npm run cypress:test`
 - Now we have a failing test to drive new functionality
 
-There are a number of ways that we could make this go green but React [State Hooks](https://reactjs.org/docs/hooks-state.html) are one of the simplest ways to achieve this outcome.
+There are a number of ways that we could make this go green but React [Hooks](https://react.dev/reference/react/useState) are one of the simplest ways to achieve this outcome.
 
 - Import the `useState` hook at the top of `App.js`
 
