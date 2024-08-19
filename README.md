@@ -70,7 +70,7 @@ test('should reset the form after a note is saved', () => {
 
   fireEvent.click(button);
 
-  expect(setFormDataCallback).toHaveBeenCalledWith({
+  expect(mockSetFormDataCallback).toHaveBeenCalledWith({
     name: '',
     description: ''
   });
