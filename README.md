@@ -62,7 +62,7 @@ it('should have header', () => {
 ```js
 import Header from "./header";
  
-export default function Layout({ children }: any) {
+export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
   return (
     <>
       <Header />
