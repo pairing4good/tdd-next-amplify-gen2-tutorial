@@ -68,11 +68,15 @@ In [TypeScript](https://www.typescriptlang.org/) [arrays](https://www.typescript
 - In order to share the `Notes` interface throughout the application create a new file named `types.ts` inside the `src/app` folder.
 
 ```js
+/* istanbul ignore file */
+
 export interface Note {
   name: string;
   description: string;
 }
 ```
+
+The first line is a [comment](https://jestjs.io/docs/configuration#collectcoverage-boolean) that exludes this file from [code coverage](https://en.wikipedia.org/wiki/Code_coverage).  While this should be used sparingly, interfaces and types do not need to be tested directly since they do not contain any logic.
 
 - Now let's update the `useState` to use this new `Note` type.  This is accomplished through TypeScript [generics](https://www.typescriptlang.org/docs/handbook/2/generics.html).
 
