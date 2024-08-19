@@ -2,7 +2,7 @@
 
 ## Saving A Note
 
-So far we've only test driven the notes form and the ability to display a note.  Now let's test drive the ability to save notes.
+Now let's take a look back at our story on our [Kanban board](https://en.wikipedia.org/wiki/Kanban).  So far we've only test driven the notes form and the ability to display a note.  Now let's test drive the ability to save notes.
 
 ### Why: User Story
 
