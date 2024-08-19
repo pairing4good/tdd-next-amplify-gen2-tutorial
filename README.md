@@ -34,7 +34,7 @@ Then a note is listed
 
 These three user acceptance criteria will drive the need to actually save notes. While this can be achieved through component tests, let's add this to our high-level UI test. These tests are often called end-to-end tests because they follow a few paths through the application. These tests are at the top of the testing pyramid because they tend to be slower and more brittle than tests that are lower in the pyramid. This translates into these end-to-end tests tending to cost more to build, run and maintain. Consequently, we try to limit their number to only a few tests that follow the most common paths through the system.
 
-- Let's start with the first acceptance criteria. To achieve this we need to add an initial check, in `note.cy.js`, to verify that no notes are listed prior to entering a note.
+- Let's start with the first acceptance criteria. To achieve this we need to add an initial check, in `note.cy.ts`, to verify that no notes are listed prior to entering a note.
 
 ```js
 it('should create a note when name and description provided', () => {
