@@ -24,8 +24,15 @@ describe('Note Capture', () => {
 - This test now fails with
 
 ```
-get [data-testid=note-name-field]
-assert expected <input> to have value '', but the value was test note
+  1) Note Capture
+       should create a note when name and description provided:
+
+      Timed out retrying after 4000ms
+      + expected - actual
+
+      -'test note'
+      
+      at Context.eval (webpack://tdd-next-amplify-gen2-tutorial/./cypress/e2e/note.cy.ts:10:0)
 ```
 
 - To make this pass we need to connect the name and description fields to the form data in `NoteForm.js`
