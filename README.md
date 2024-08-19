@@ -14,10 +14,7 @@ Customers rarely ask explicitly for a usable product. In this application rich w
 
 ```js
 export default function Header() {
-
-  return (
-
-  );
+  return <></>;
 }
 ```
 
