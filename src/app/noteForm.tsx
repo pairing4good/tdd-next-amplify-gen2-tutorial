@@ -13,6 +13,12 @@ export default function NoteForm({
   setFormDataCallback,
   setNotesCallback,
 }: Parameters) {
+
+  function createNote() {
+    if (!formData.name || !formData.description) return;
+    setNotesCallback([...notes, formData]);
+  }
+  
   return (
     <>
       <input
@@ -38,7 +44,7 @@ export default function NoteForm({
       <button
         data-testid="note-form-submit"
         type="button"
-        onClick={() => setNotesCallback([...notes, formData])}
+        onClick={createNote}
       >
         Create Note
       </button>
