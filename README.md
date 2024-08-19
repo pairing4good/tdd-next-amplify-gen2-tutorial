@@ -114,7 +114,7 @@ export default function NoteForm({ notes }: Parameters) {
         Create Note
       </button>
       {notes.map((note, index) => (
-        <div>
+        <div key={index}>
           <p data-testid={`test-name-${index}`}>{note.name}</p>
           <p data-testid={`test-description-${index}`}>{note.description}</p>
         </div>
