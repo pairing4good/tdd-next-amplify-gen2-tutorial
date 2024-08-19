@@ -105,6 +105,17 @@ In order to test drive validation we need to determine where in the testing pyra
 
 ```js
 test('should require name and description', () => {
+  cleanup();
+  const formData: Note = { name: '', description: '' };
+  const initialNotes: Note[] = [];
+  
+  render(<NoteForm
+      notes={initialNotes}
+      formData={formData}
+      setFormDataCallback={mockSetFormDataCallback}
+      setNotesCallback={mockSetNotesCallback}
+    />);
+
   const button = screen.getByTestId('note-form-submit');
 
   fireEvent.click(button);
@@ -155,36 +166,60 @@ export default function NoteForm({
 
 ```js
 test('should require name when description provided', () => {
-  formData.description = 'test description';
-  formData.name = '';
+  cleanup();
+  const formData: Note = { name: '', description: 'test description' };
+  const initialNotes: Note[] = [];
+  
+  render(<NoteForm
+      notes={initialNotes}
+      formData={formData}
+      setFormDataCallback={mockSetFormDataCallback}
+      setNotesCallback={mockSetNotesCallback}
+    />);
 
   const button = screen.getByTestId('note-form-submit');
 
   fireEvent.click(button);
 
-  expect(setNotesCallback.mock.calls.length).toBe(0);
+  expect(mockSetNotesCallback.mock.calls.length).toBe(0);
 });
 
 test('should require description when name provided', () => {
-  formData.description = '';
-  formData.name = 'test name';
+  cleanup();
+  const formData: Note = { name: 'test name', description: '' };
+  const initialNotes: Note[] = [];
+  
+  render(<NoteForm
+      notes={initialNotes}
+      formData={formData}
+      setFormDataCallback={mockSetFormDataCallback}
+      setNotesCallback={mockSetNotesCallback}
+    />);
 
   const button = screen.getByTestId('note-form-submit');
 
   fireEvent.click(button);
 
-  expect(setNotesCallback.mock.calls.length).toBe(0);
+  expect(mockSetNotesCallback.mock.calls.length).toBe(0);
 });
 
 test('should add a new note when name and description are provided', () => {
-  formData.description = 'test description';
-  formData.name = 'test name';
+  cleanup();
+  const formData: Note = { name: 'test name', description: 'test description' };
+  const initialNotes: Note[] = [];
+  
+  render(<NoteForm
+      notes={initialNotes}
+      formData={formData}
+      setFormDataCallback={mockSetFormDataCallback}
+      setNotesCallback={mockSetNotesCallback}
+    />);
 
   const button = screen.getByTestId('note-form-submit');
 
   fireEvent.click(button);
 
-  expect(setNotesCallback.mock.calls.length).toBe(1);
+  expect(mockSetNotesCallback.mock.calls.length).toBe(1);
 });
 ```
 
