@@ -22,16 +22,6 @@ exports[`renders homepage unchanged 1`] = `
       >
         Create Note
       </button>
-      <p
-        data-testid="test-name-0"
-      >
-        test note
-      </p>
-      <p
-        data-testid="test-description-0"
-      >
-        test note description
-      </p>
     </body>
   </html>
 </div>
