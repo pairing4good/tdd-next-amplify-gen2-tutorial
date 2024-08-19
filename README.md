@@ -81,33 +81,55 @@ While components don't look like functions, they are. React uses [JSX](https://r
 
 ### Note List Component
 
-Let's pull out a `NoteList.js` component in order to separate these responsibilities.
+Let's pull out a `noteList.ys` component in order to separate these responsibilities.
 
-- Create a new file called `NoteList.js` under the `src/app` directory.
+- Create a new file called `noteList.tsx` under the `src/app` directory.
 
 ```js
-function NoteList(props) {
+export default function NoteList() {
 
   return (
 
   );
 }
-
-export default NoteList;
 ```
 
-- Cut the JSX, that lists notes in the `NoteForm` component, and paste it into the new component.
+- In order to remain on green you will need to create a new test named `noteList.test.tsx` under the `src/app` folder
+- Cut the tests related to listing notes over to the new testnoteL
 
 ```js
-import PropTypes from 'prop-types';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { Note } from '@/app/types';
+import NoteList from '@/app/noteList';
 
-function NoteList(props) {
-  const { notes } = props;
+test('should display notes correctly', () => {
+  const notes: Note[] = [
+    { name: 'First Note', description: 'First Description' },
+    { name: 'Second Note', description: 'Second Description' }
+  ];
+
+  render(<NoteList
+      notes={notes}
+    />);
+
+  notes.forEach((note, index) => {
+    expect(screen.getByTestId(`test-name-${index}`)).toHaveTextContent(note.name);
+    expect(screen.getByTestId(`test-description-${index}`)).toHaveTextContent(note.description);
+  });
+});
+```
+
+- In order to make this go green, cut the TSX, that lists notes in the `NoteForm` component, and paste it into the new component.
+
+```js
+import { Note } from "./types";
+
+export default function NoteList({ notes }: { notes: Note[] }) {
 
   return (
     <>
       {notes.map((note, index) => (
-        <div>
+        <div key={index}>
           <p data-testid={`test-name-${index}`}>{note.name}</p>
           <p data-testid={`test-description-${index}`}>{note.description}</p>
         </div>
@@ -115,27 +137,21 @@ function NoteList(props) {
     </>
   );
 }
-
-NoteList.propTypes = {
-  notes: PropTypes.arrayOf(
-    PropTypes.shape({ name: PropTypes.string, description: PropTypes.string })
-  ).isRequired
-};
-
-export default NoteList;
 ```
 
 - Now instead of adding the `NoteList` component back into the `NoteForm` component, bring it up a level and place it in the `App` component. This prevents unnecessary [coupling](<https://en.wikipedia.org/wiki/Coupling_(computer_programming)>) between the `NoteForm` component and the `NoteList` component.
 
 ```js
-import React, { useState } from 'react';
-import './App.css';
-import NoteForm from './NoteForm';
-import NoteList from './NoteList';
+"use client";
 
-function App() {
-  const [notes, setNotes] = useState([]);
-  const [formData, setFormData] = useState({ name: '', description: '' });
+import React, { useState } from "react";
+import NoteForm from "./noteForm";
+import { Note } from "./types";
+import NoteList from "./noteList";
+
+export default function App() {
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [formData, setFormData] = useState<Note>({ name: "", description: "" });
 
   return (
     <>
@@ -149,8 +165,6 @@ function App() {
     </>
   );
 }
-
-export default App;
 ```
 
 - Run all of your tests including Cypress.
