@@ -93,6 +93,7 @@ The first line is a [comment](https://jestjs.io/docs/configuration#collectcovera
 
 import React, { useState } from 'react';
 import NoteForm from "./noteForm";
+import { Note } from './types';
 
 export default function App() {
   const [notes, setNotes] = useState<Note[]>([]);
