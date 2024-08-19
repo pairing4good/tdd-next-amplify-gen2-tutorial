@@ -246,7 +246,7 @@ export default function NoteForm({
 TypeError: Cannot read property 'map' of undefined
 ```
 
-- The `NoteForm.test.js` component test does not pass any parameters to the component so the `notes` is [undefined](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined). In order to fix this test we must pass an array of `notes` to the `NoteForm` component.
+- The `noteForm.test.tsx` component test does not pass any parameters to the component so the `notes` is [undefined](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined). In order to fix this test we must pass an array of `notes` to the `NoteForm` component.
 
 ```js
 beforeEach(() => {
@@ -262,6 +262,123 @@ beforeEach(() => {
 
 - The `jest.fn()` is a [Mock Function](https://jestjs.io/docs/mock-functions) that conforms to the defined parameter types through [Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html).
 
+### Test Coverage
+Now when you run `npm run test:coverage` we fail because our [jest](https://jestjs.io/) tests cover less than 80% of our code.
+
+```
+--------------|---------|----------|---------|---------|-------------------
+File          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+--------------|---------|----------|---------|---------|-------------------
+All files     |   68.75 |      100 |   42.85 |   73.33 |                   
+ layout.tsx   |   83.33 |      100 |     100 |     100 |                   
+ noteForm.tsx |      20 |      100 |      20 |      20 | 21-46             
+ page.tsx     |     100 |      100 |     100 |     100 |                   
+--------------|---------|----------|---------|---------|-------------------
+Jest: "global" coverage threshold for lines (80%) not met: 73.33%
+Jest: "global" coverage threshold for functions (80%) not met: 42.85%
+```
+
+While our [Cypress][https://www.cypress.io/] acceptance tests drove our code we need to create tests lower in the [testing pyramid](https://martinfowler.com/bliki/TestPyramid.html) to cover more testing scenarios.  Even though we are driving the code through acceptance tests we should keep these tests as minimal as possible because they are slow and costly to run and maintain over time.  As a result, we will use lower level tests within the testing pyramid to cover all of the possible scenarios.
+
+- In the `noteForm.test.tsx` component test add the following to the set up
+
+```js
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import NoteForm from '@/app/noteForm';
+import { Note } from '@/app/types';
+
+const mockSetFormDataCallback = jest.fn();
+const mockSetNotesCallback = jest.fn();
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  render(<NoteForm
+      notes={[]}
+      formData={{name: '', description: ''}}
+      setFormDataCallback={mockSetFormDataCallback}
+      setNotesCallback={mockSetNotesCallback}
+    />);
+});
+```
+
+- Then add the following test case to `noteForm.test.tsx`
+
+```js
+test('should call setFormDataCallback with the correct name value on input change', () => {
+  const nameInput = screen.getByTestId('note-name-field');
+  fireEvent.change(nameInput, { target: { value: 'New Note Name' } });
+  expect(mockSetFormDataCallback).toHaveBeenCalledWith({
+    name: 'New Note Name',
+    description: '',
+  });
+});
+```
+
+- [fireEvent](https://testing-library.com/docs/dom-testing-library/api-events/) `change` function calls the `onChange` [listener](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/change_event) to verify that the `mockSetFormDataCallback` was called with the new value of `New Note Name`.
+
+- Next add the following test case to `noteForm.test.tsx`
+
+```js
+test('should call setFormDataCallback with the correct description value on input change', () => {
+  const descriptionInput = screen.getByTestId('note-description-field');
+  fireEvent.change(descriptionInput, { target: { value: 'New Note Description' } });
+  expect(mockSetFormDataCallback).toHaveBeenCalledWith({
+    name: '',
+    description: 'New Note Description',
+  });
+});
+```
+
+- Then add the next test case to `noteForm.test.tsx`
+
+```js
+test('should call setNotesCallback with updated notes array when create note button is clicked', () => {
+  cleanup();
+  const formData: Note = { name: 'Note Name', description: 'Note Description' };
+  const initialNotes: Note[] = [];
+  
+  render(<NoteForm
+      notes={initialNotes}
+      formData={formData}
+      setFormDataCallback={mockSetFormDataCallback}
+      setNotesCallback={mockSetNotesCallback}
+    />);
+  
+  const button = screen.getByTestId('note-form-submit');
+  fireEvent.click(button);
+
+  expect(mockSetNotesCallback).toHaveBeenCalledWith([formData]);
+});
+```
+
+- The [cleanup](https://testing-library.com/docs/preact-testing-library/api/#cleanup) function removes the rendering from the `beforeEach` function that runs before each test so this tests can render the `NoteForm` with a note that has a `name` and `description`
+- [fireEvent](https://testing-library.com/docs/dom-testing-library/api-events/) `click` function clicks the `note-form-submit` button.
+
+- Then add one more test case to verify that existing notes are listed correctly.
+
+```js
+test('should display notes correctly', () => {
+  cleanup();
+  const notes: Note[] = [
+    { name: 'First Note', description: 'First Description' },
+    { name: 'Second Note', description: 'Second Description' }
+  ];
+
+  render(<NoteForm
+      notes={notes}
+      formData={{name: '', description: ''}}
+      setFormDataCallback={mockSetFormDataCallback}
+      setNotesCallback={mockSetNotesCallback}
+    />);
+
+  notes.forEach((note, index) => {
+    expect(screen.getByTestId(`test-name-${index}`)).toHaveTextContent(note.name);
+    expect(screen.getByTestId(`test-description-${index}`)).toHaveTextContent(note.description);
+  });
+});
+```
+
+- Now `npm run test:coverage` passes.
 - All of our tests are Green!
 - Don't forget to commit your changes
 
