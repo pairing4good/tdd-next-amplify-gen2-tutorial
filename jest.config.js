@@ -7,7 +7,6 @@ const createJestConfig = nextJest({
 
 // Add any custom config to be passed to Jest
 const customJestConfig = {
-  coverageProvider: 'v8',
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
   ],
