@@ -1,141 +1,62 @@
-# TDD AWS Amplify Next App - Step 4
+# TDD AWS Amplify Next App - Step 5
 
-## Refactor - Single Responsibility
+## Testing NoteList Component
 
-> The [Single Responsibility](https://en.wikipedia.org/wiki/Single-responsibility_principle) Principle (SRP) states that each software module should have one and only one reason to change. - Robert C. Martin
+As we refactor, we need to remember what level of testing we have written within the testing pyramid. While we have a few far reaching tests at the top of the pyramid, don't think that they adequately test the behavior of each component. The bottom of the testing pyramid is wide because it provides broad test coverage.
 
-Now it's clear that the `NoteForm` component has more than one responsibility:
+Now that `NoteList` is broken out into its own focused component it will be much easier to comprehensively test.
 
-```js
-function NoteForm(props) {
-  return (
-    <div>
-      // 1. Note Creation
-      <input
-        data-testid="note-name-field"
-        onChange={(e) =>
-          setFormDataCallback({
-            ...formData,
-            name: e.target.value
-          })
-        }
-        placeholder="Note Name"
-      />
-      <input
-        data-testid="note-description-field"
-        onChange={(e) =>
-          setFormDataCallback({
-            ...formData,
-            description: e.target.value
-          })
-        }
-        placeholder="Note Description"
-      />
-      <button data-testid="note-form-submit" onClick={() => setNotesCallback([...notes, formData])}>
-        Create Note
-      </button>
-      // 2. Note Listing
-      {notes.map((note, index) => (
-        <div>
-          <p data-testid={'test-name-' + index}>{note.name}</p>
-          <p data-testid={'test-description-' + index}>{note.description}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-```
+### Test No Notes
 
-If you go up to the `App` component the call to the `NoteForm` component takes 4 arguments. This is a [smell](https://en.wikipedia.org/wiki/Code_smell) indicating that this component is doing too many things.
+We are going to write a number of test cases within `noteList.test.tsx`.  Before we write more test cases let's rename the existing test case to clarify that it is displaying multiple notes.
+
 
 ```js
-<NoteForm
-  notes={notes}
-  formData={formData}
-  setFormDataCallback={setFormData}
-  setNotesCallback={setNotes}
-/>
+test('should display multiple notes when more than one notes is provided', () => {
+  ...
+});
 ```
 
-> Functions should have a small number of arguments. No argument is best, followed by one, two, and three. More than three is very questionable and should be avoided with prejudice. - Robert C. Martin
-
-While components don't look like functions, they are. React uses [JSX](https://reactjs.org/docs/introducing-jsx.html) which is interpreted into [JavaScript functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions).
-
-### Note List Component
-
-Let's pull out a `NoteList.js` component in order to separate these responsibilities.
-
-- Create a new file called `NoteList.js` under the `src/app` directory.
+- Now let's add a new test that verifies that no notes are rendered when no notes are provided
 
 ```js
-function NoteList(props) {
+test('should display nothing when no notes are provided', () => {
+  render(<NoteList notes={[]} />);
+  const firstNoteName = screen.queryByTestId('test-name-0');
 
-  return (
-
-  );
-}
-
-export default NoteList;
+  expect(firstNoteName).toBeNull();
+});
 ```
 
-- Cut the JSX, that lists notes in the `NoteForm` component, and paste it into the new component.
+- Now add a test that verifies that one note is rendered
 
 ```js
-import PropTypes from 'prop-types';
+test('should display one note when one notes is provided', () => {
+  const note = { name: 'test name', description: 'test description' };
+  render(<NoteList notes={[note]} />);
 
-function NoteList(props) {
-  const { notes } = props;
+  const firstNoteName = screen.queryByTestId('test-name-0');
+  expect(firstNoteName).toHaveTextContent('test name');
 
-  return (
-    <>
-      {notes.map((note, index) => (
-        <div>
-          <p data-testid={`test-name-${index}`}>{note.name}</p>
-          <p data-testid={`test-description-${index}`}>{note.description}</p>
-        </div>
-      ))}
-    </>
-  );
-}
-
-NoteList.propTypes = {
-  notes: PropTypes.arrayOf(
-    PropTypes.shape({ name: PropTypes.string, description: PropTypes.string })
-  ).isRequired
-};
-
-export default NoteList;
+  const firstNoteDescription = screen.queryByTestId('test-description-0');
+  expect(firstNoteDescription).toHaveTextContent('test description');
+});
 ```
 
-- Now instead of adding the `NoteList` component back into the `NoteForm` component, bring it up a level and place it in the `App` component. This prevents unnecessary [coupling](<https://en.wikipedia.org/wiki/Coupling_(computer_programming)>) between the `NoteForm` component and the `NoteList` component.
+- Finally, let's add a test that verifies an exception is thrown when a list is not provided.
+
+This may seem unnecessary but it's important to test negative cases too. Tests not only provide accountability and quick feedback loops for the [application under test](https://en.wikipedia.org/wiki/System_under_test) but it also provides [living documentation](https://en.wikipedia.org/wiki/Living_document) for new and existing team members.
 
 ```js
-import React, { useState } from 'react';
-import './App.css';
-import NoteForm from './NoteForm';
-import NoteList from './NoteList';
-
-function App() {
-  const [notes, setNotes] = useState([]);
-  const [formData, setFormData] = useState({ name: '', description: '' });
-
-  return (
-    <>
-      <NoteForm
-        notes={notes}
-        formData={formData}
-        setFormDataCallback={setFormData}
-        setNotesCallback={setNotes}
-      />
-      <NoteList notes={notes} />
-    </>
-  );
-}
-
-export default App;
+test('should throw an exception the note array is undefined', () => {
+  expect(() => {
+    render(<NoteList notes={undefined}/>);
+  }).toThrow();
+});
 ```
 
-- Run all of your tests including Cypress.
-- It's Green!
+- All of your non-UI tests are Green.
+- Don't forget to rerun your Cypress tests. Green!
+- Commit on Green.
 
-[<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/003-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/005-step)
+[<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/004-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/006-step)

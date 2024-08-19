@@ -68,23 +68,3 @@ test('should call setNotesCallback with updated notes array when create note but
 
   expect(mockSetNotesCallback).toHaveBeenCalledWith([formData]);
 });
-
-test('should display notes correctly', () => {
-  cleanup();
-  const notes: Note[] = [
-    { name: 'First Note', description: 'First Description' },
-    { name: 'Second Note', description: 'Second Description' }
-  ];
-
-  render(<NoteForm
-      notes={notes}
-      formData={{name: '', description: ''}}
-      setFormDataCallback={mockSetFormDataCallback}
-      setNotesCallback={mockSetNotesCallback}
-    />);
-
-  notes.forEach((note, index) => {
-    expect(screen.getByTestId(`test-name-${index}`)).toHaveTextContent(note.name);
-    expect(screen.getByTestId(`test-description-${index}`)).toHaveTextContent(note.description);
-  });
-});
