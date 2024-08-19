@@ -49,11 +49,16 @@ This may seem unnecessary but it's important to test negative cases too. Tests n
 
 ```js
 test('should throw an exception the note array is undefined', () => {
+  const error = jest.spyOn(console, "error").mockImplementation(() => {});
   expect(() => {
     render(<NoteList notes={undefined}/>);
   }).toThrow();
+
+  expect(error.mock.calls[0].toString()).toContain("TypeError: Cannot read properties of undefined");
 });
 ```
+
+- The [jest.spyOn](https://jestjs.io/docs/jest-object#jestspyonobject-methodname) allows us to capture the error and verify it's contents.  By adding `mockImplementation(() => {})` the error is prevented from makeing it to the console.  This helps keep your tests clean so you only see errors that are failures rather than this error which is expected.
 
 - All of your non-UI tests are Green.
 - Don't forget to rerun your Cypress tests. Green!
