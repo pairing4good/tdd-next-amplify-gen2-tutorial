@@ -1,94 +1,50 @@
-# TDD AWS Amplify Next App - Step 7
+# TDD AWS Amplify Next App - Step 8
 
-## Reset Form
+## Demo Your Application To Your Customer
 
-When a note is saved the name and description fields should be reset to empty strings.
-
-- Add a test to `noteForm.test.tsx`
+Be sure to start up your application and walk through it with your customers. When I was doing this, I noticed that the form is not resetting after a note is created. This is very annoying. In order to test drive this behavior I will add two additional assertions to the end of the UI test to verify that the form is reset.
 
 ```js
-test('should reset the form after a note is saved', () => {
-  cleanup();
-  const formData: Note = { name: 'test name', description: 'test description' };
-  const initialNotes: Note[] = [];
-  
-  render(<NoteForm
-    notes={initialNotes}
-    formData={formData}
-    setFormDataCallback={mockSetFormDataCallback}
-    setNotesCallback={mockSetNotesCallback}
-  />);
+describe('Note Capture', () => {
+  it('should create a note when name and description provided', () => {
+    ...
+    cy.get('[data-testid=note-form-submit]').click();
 
-  const button = screen.getByTestId('note-form-submit');
+    cy.get('[data-testid=note-name-field]').should('have.value', '');
+    cy.get('[data-testid=note-description-field]').should('have.value', '');
 
-  fireEvent.click(button);
-
-  expect(formData.name).toBe('');
-  expect(formData.description).toBe('');
-});
-```
-
-- Make this failing test go Green
-
-```js
-function createNote() {
-  if (!formData.name || !formData.description) return;
-  setNotesCallback([...notes, formData]);
-  formData.name = '';
-  formData.description = '';
-}
-```
-
-- Green
-- Run the Cypress tests and it's **Red**.
-
-What happened? Well, while this approach worked for a lower level component test it doesn't work when React is managing its own [state](https://reactjs.org/docs/state-and-lifecycle.html). React clearly warns us that we should [not modify state directly](https://reactjs.org/docs/state-and-lifecycle.html#do-not-modify-state-directly). Instead you should use the [setState](https://reactjs.org/docs/hooks-state.html) callback hook.
-
-- Let's update the test to use the `setFormDataCallback` callback.
-
-```js
-const setNotesCallback = jest.fn();
-const setFormDataCallback = jest.fn();
-const formData = { name: '', description: '' };
-
-beforeEach(() => {
-  render(
-    <NoteForm
-      notes={[]}
-      setNotesCallback={setNotesCallback}
-      setFormDataCallback={setFormDataCallback}
-      formData={formData}
-    />
-  );
-});
-...
-test('should reset the form after a note is saved', () => {
-  formData.name = 'test name';
-  formData.description = 'test description';
-
-  const button = screen.getByTestId('note-form-submit');
-
-  fireEvent.click(button);
-
-  expect(setFormDataCallback).toHaveBeenCalledWith({
-    name: '',
-    description: ''
+    cy.get('[data-testid=test-name-0]').should('have.text', 'test note');
+    ...
   });
+
+  ...
 });
 ```
 
-- This red test drives these code changes
+- This test now fails with
 
-```js
-function createNote() {
-  if (!formData.name || !formData.description) return;
-  setNotesCallback([...notes, formData]);
-  setFormDataCallback({ name: '', description: '' });
-}
+```
+get [data-testid=note-name-field]
+assert expected <input> to have value '', but the value was test note
 ```
 
-- Green!
-- The Cypress test is now Green!
-- Commit
+- To make this pass we need to connect the name and description fields to the form data in `NoteForm.js`
 
-[<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/006-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/008-step)
+```js
+<input
+  data-testid="note-name-field"
+  ...
+  value={formData.name}
+  ...
+/>
+<input
+  data-testid="note-description-field"
+  ...
+  value={formData.description}
+  ...
+/>
+```
+
+- Green! Commit!
+
+[<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/007-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/009-step)

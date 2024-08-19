@@ -144,3 +144,25 @@ test('should add a new note when name and description are provided', () => {
 
   expect(mockSetNotesCallback.mock.calls.length).toBe(1);
 });
+
+test('should reset the form after a note is saved', () => {
+  cleanup();
+  const formData: Note = { name: 'test name', description: 'test description' };
+  const initialNotes: Note[] = [];
+  
+  render(<NoteForm
+    notes={initialNotes}
+    formData={formData}
+    setFormDataCallback={mockSetFormDataCallback}
+    setNotesCallback={mockSetNotesCallback}
+  />);
+
+  const button = screen.getByTestId('note-form-submit');
+
+  fireEvent.click(button);
+
+  expect(mockSetFormDataCallback).toHaveBeenCalledWith({
+    name: '',
+    description: ''
+  });
+});
