@@ -24,3 +24,7 @@ it('should create a note when name and description provided', () => {
   cy.get('[data-testid=test-name-0]').should('have.text', 'test note');
   cy.get('[data-testid=test-description-0]').should('have.text', 'test note description');
 });
+
+it('should have header', () => {
+  cy.get('h1').should('have.text', 'My Notes App');
+});
