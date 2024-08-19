@@ -63,8 +63,8 @@ The `README.md` file is the first thing anyone sees when they open this reposito
 
 ```
 As a team member
-I want to view my notes
-So that I can refer back to them
+I want to capture a note
+So that I can refer back to it later
 ```
 
 ### What: User Acceptance Criteria
