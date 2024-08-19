@@ -8,8 +8,16 @@ When a note is saved the name and description fields should be reset to empty st
 
 ```js
 test('should reset the form after a note is saved', () => {
-  formData.name = 'test name';
-  formData.description = 'test description';
+  cleanup();
+  const formData: Note = { name: 'test name', description: 'test description' };
+  const initialNotes: Note[] = [];
+  
+  render(<NoteForm
+    notes={initialNotes}
+    formData={formData}
+    setFormDataCallback={mockSetFormDataCallback}
+    setNotesCallback={mockSetNotesCallback}
+  />);
 
   const button = screen.getByTestId('note-form-submit');
 
