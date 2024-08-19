@@ -35,7 +35,10 @@ test('should display one note when one notes is provided', () => {
 });
 
 test('should throw an exception the note array is undefined', () => {
+  const error = jest.spyOn(console, "error").mockImplementation(() => {});
   expect(() => {
     render(<NoteList notes={undefined}/>);
   }).toThrow();
+
+  expect(error.mock.calls[0].toString()).toContain("TypeError: Cannot read properties of undefined");
 });
