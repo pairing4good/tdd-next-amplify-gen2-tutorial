@@ -99,7 +99,7 @@ In order to test drive validation we need to determine where in the testing pyra
 
 #### Name and Description Blank
 
-- Add a test to `NoteForm.test.js`
+- Add a test to `noteForm.test.js`
 
 ```js
 test('should require name and description', () => {
@@ -149,7 +149,7 @@ export default function NoteForm({
 
 #### Name And Description Required
 
-- Add the following tests to `NoteForm.test.js`
+- Add the following tests to `noteForm.test.js`
 
 ```js
 test('should require name when description provided', () => {
