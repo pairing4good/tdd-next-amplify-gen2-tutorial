@@ -61,14 +61,16 @@ it('should have header', () => {
 
 ```js
 import Header from "./header";
- 
-export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
+
+export default function RootLayout({children}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <>
-      <Header />
-      <main>{children}</main>
-    </>
-  )
+    <html lang="en">
+      <body>
+        <Header />
+        <main>{children}</main>
+      </body>
+    </html>
+  );
 }
 ```
 
