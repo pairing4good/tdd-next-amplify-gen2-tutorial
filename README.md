@@ -4,7 +4,15 @@
 
 So far we've only test driven the notes form and the ability to display a note.  Now let's test drive the ability to save notes.
 
-### User Acceptance Criteria
+### Why: User Story
+
+```
+As a team member
+I want to capture a note
+So that I can refer back to it later
+```
+
+### What: User Acceptance Criteria
 
 ```
 Given that no notes are entered
