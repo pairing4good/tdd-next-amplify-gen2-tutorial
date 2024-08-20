@@ -21,9 +21,9 @@ it('should load previously saved notes on browser refresh', () => {
 
 ```js
 ...
-function App() {
-  const [notes, setNotes] = useState([]);
-  const [formData, setFormData] = useState({ name: '', description: '' });
+export default function App() {
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [formData, setFormData] = useState<Note>({ name: "", description: "" });
 
   const fetchNotesCallback = () => {
     const savedNotesString = localStorage.getItem('notes');
