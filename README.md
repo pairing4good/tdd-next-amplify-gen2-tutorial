@@ -279,7 +279,8 @@ Jest: "global" coverage threshold for lines (80%) not met: 73.33%
 Jest: "global" coverage threshold for functions (80%) not met: 42.85%
 ```
 
-While our [Cypress][https://www.cypress.io/] acceptance tests drove our code we need to create tests lower in the [testing pyramid](https://martinfowler.com/bliki/TestPyramid.html) to cover more testing scenarios.  Even though we are driving the code through acceptance tests we should keep these tests as minimal as possible because they are slow and costly to run and maintain over time.  As a result, we will use lower level tests within the testing pyramid to cover all of the possible scenarios.
+While our [Cypress][https://www.cypress.io/] acceptance tests drove our code we need to create tests lower in the [testing pyramid](https://martinfowler.com/bliki/TestPyramid.html) to cover more testing scenarios.  
+> Even though we are driving the code through acceptance tests we should keep these tests as minimal as possible because they are slow and costly to run and maintain over time.  As a result, we will use lower level tests within the testing pyramid to cover all of the possible scenarios.
 
 - In the `noteForm.test.tsx` component test add the following to the set up
 
