@@ -21,23 +21,23 @@ describe("Note Capture", () => {
     cy.get("[data-testid=test-name-0]").should("have.text", "test note");
     cy.get("[data-testid=test-description-0]").should("have.text", "test note description");
   });
-});
 
-it("should load previously saved notes on browser refresh", () => {
-  cy.get("[data-testid=note-name-field]").type("test note 2");
-  cy.get("[data-testid=note-description-field]").type("test note description 2");
-  cy.get("[data-testid=note-form-submit]").click();
-
-
-  cy.get("[data-testid=test-name-0]").should("have.text", "test note 2");
-  cy.get("[data-testid=test-description-0]").should("have.text", "test note description 2");
-
-  cy.reload();
-
-  cy.get("[data-testid=test-name-0]").should("have.text", "test note 2");
-  cy.get("[data-testid=test-description-0]").should("have.text", "test note description 2");
-});
-
-it("should have header", () => {
-  cy.get("h1").should("have.text", "My Notes App");
+  it("should load previously saved notes on browser refresh", () => {
+    cy.get("[data-testid=note-name-field]").type("test note 2");
+    cy.get("[data-testid=note-description-field]").type("test note description 2");
+    cy.get("[data-testid=note-form-submit]").click();
+  
+  
+    cy.get("[data-testid=test-name-0]").should("have.text", "test note 2");
+    cy.get("[data-testid=test-description-0]").should("have.text", "test note description 2");
+  
+    cy.reload();
+  
+    cy.get("[data-testid=test-name-0]").should("have.text", "test note 2");
+    cy.get("[data-testid=test-description-0]").should("have.text", "test note description 2");
+  });
+  
+  it("should have header", () => {
+    cy.get("h1").should("have.text", "My Notes App");
+  });
 });
