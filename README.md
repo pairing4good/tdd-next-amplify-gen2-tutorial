@@ -7,11 +7,19 @@ React creates a [single page web application](https://en.wikipedia.org/wiki/Sing
 Since Cypress tests the application in a browser, this is the most logical place to test this user expectation.
 
 ```js
-it('should load previously saved notes on browser refresh', () => {
+it("should load previously saved notes on browser refresh", () => {
+  cy.get("[data-testid=note-name-field]").type("test note 2");
+  cy.get("[data-testid=note-description-field]").type("test note description 2");
+  cy.get("[data-testid=note-form-submit]").click();
+
+
+  cy.get("[data-testid=test-name-0]").should("have.text", "test note 2");
+  cy.get("[data-testid=test-description-0]").should("have.text", "test note description 2");
+
   cy.reload();
 
-  cy.get('[data-testid=test-name-0]').should('have.text', 'test note');
-  cy.get('[data-testid=test-description-0]').should('have.text', 'test note description');
+  cy.get("[data-testid=test-name-0]").should("have.text", "test note 2");
+  cy.get("[data-testid=test-description-0]").should("have.text", "test note description 2");
 });
 ```
 
@@ -77,7 +85,7 @@ export default function App() {
 ...
 ```
 
-- Lastly, make sure you clean up the persisted notes after the Cypress test is run.
+- Lastly, make sure you clean up the persisted notes after the Cypress test is run.  The [after hook](https://docs.cypress.io/guides/core-concepts/writing-and-organizing-tests#Hooks) runs once after all fo the tests have been run.
 
 ```js
 after(() => {
