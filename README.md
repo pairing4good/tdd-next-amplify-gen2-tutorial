@@ -77,21 +77,21 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
 - It's Green!
 - Commit!
 
-You will notice that in the TDD testing cycle we commit very small bits of working code. We commit all the time. While this may seem like overkill, here are some benefits.
-
-1. Our commit messages tell a focused, step-by-step story that explains why we made each change.
-1. We are preserving working code. ["Working software is the primary measure of progress."](https://agilemanifesto.org/principles.html)
-1. We can [revert](<https://en.wikipedia.org/wiki/Reversion_(software_development)>) our changes back to a known working state without losing very many changes.
-
-This last benefit is worth expounding upon. The TDD testing cycle keeps us laser focused on writing small pieces of working functionality. In fact, the [3 Laws of TDD](http://blog.cleancoder.com/uncle-bob/2014/12/17/TheCyclesOfTDD.html) prevent us from writing more code than is necessary to satisfy a focused test.
-
-#### Three Laws of TDD
-
-1. You must write a failing test before you write any production code.
-1. You must not write more of a test than is sufficient to fail, or fail to compile.
-1. You must not write more production code than is sufficient to make the currently failing test pass.
-
-These tight feedback loops help software developers avoid going down rabbit holes that lead to [over-engineering](https://en.wikipedia.org/wiki/Overengineering).
+> You will notice that in the TDD testing cycle we commit very small bits of working code. We commit all the time. While this may seem like overkill, here are some benefits.
+> 
+> 1. Our commit messages tell a focused, step-by-step story that explains why we made each change.
+> 1. We are preserving working code. ["Working software is the primary measure of progress."](https://agilemanifesto.org/principles.html)
+> 1. We can [revert](<https://en.wikipedia.org/wiki/Reversion_(software_development)>) our changes back to a known working state without losing very many changes.
+>
+>This last benefit is worth expounding upon. The TDD testing cycle keeps us laser focused on writing small pieces of working functionality. In fact, the [3 Laws of TDD](http://blog.cleancoder.com/uncle-bob/2014/12/17/TheCyclesOfTDD.html) prevent us from writing more code than is necessary to satisfy a focused test.
+>
+> #### Three Laws of TDD
+> 
+> 1. You must write a failing test before you write any production code.
+> 1. You must not write more of a test than is sufficient to fail, or fail to compile.
+> 1. You must not write more production code than is sufficient to make the currently failing test pass.
+> 
+> These tight feedback loops help software developers avoid going down rabbit holes that lead to [over-engineering](https://en.wikipedia.org/wiki/Overengineering).
 
 ### Form Validation
 
