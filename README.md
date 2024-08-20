@@ -81,7 +81,7 @@ While components don't look like functions, they are. React uses [JSX](https://r
 
 ### Note List Component
 
-Let's pull out a `noteList.ys` component in order to separate these responsibilities.
+Let's pull out a `noteList.ts` component in order to separate these responsibilities.
 
 - Create a new file called `noteList.tsx` under the `src/app` directory.
 
