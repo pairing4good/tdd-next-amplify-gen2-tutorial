@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import NoteForm from "./noteForm";
 import { Note } from "./types";
 import NoteList from "./noteList";
+import { findAll, save } from "./noteRepository";
 
 export default function App() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -14,18 +15,13 @@ export default function App() {
   }, []);
 
   const fetchNotesCallback = () => {
-    const savedNotesString = localStorage.getItem("notes");
-    const savedNotes = savedNotesString ? JSON.parse(savedNotesString) : null;
-
-    if (savedNotes) return setNotes(savedNotes);
-    return setNotes([]);
+    return setNotes(findAll());
   };
 
   const createNote = () => {
-    const updatedNoteList = [...notes, formData];
-    setNotes(updatedNoteList);
-    const updatedNotesListString = JSON.stringify(updatedNoteList);
-    localStorage.setItem('notes', updatedNotesListString);
+    save(formData);
+    const notes = findAll();
+    setNotes(notes);
   };
 
   return (

@@ -1,38 +1,27 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import App from "@/app/page";
+import * as noteRepository from "@/app/noteRepository";
 
-const localStorageMock = (() => {
-  let store: Record<string, string> = {};
-  return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => {
-      store[key] = value;
-    },
-    clear: () => {
-      store = {};
-    },
-  };
-})();
+jest.mock('../../app/noteRepository');
+
+const mockFindAll = noteRepository.findAll as jest.Mock;
+const mockSave = noteRepository.save as jest.Mock;
 
 beforeEach(() => {
-  Object.defineProperty(window, "localStorage", {
-    value: localStorageMock,
-    configurable: true,
-  });
-  localStorage.clear();
+  jest.clearAllMocks();
 });
 
 test("fetchNotesCallback should load notes from localStorage", () => {
-  const notes = [{ name: "Test Note", description: "This is a test note." }];
-  localStorage.setItem("notes", JSON.stringify(notes));
+  const mockNotes = [{ name: 'Test Note', description: 'Test Description' }];
+  mockFindAll.mockReturnValue(mockNotes);
 
   render(<App />);
 
   expect(screen.getByText("Test Note")).toBeInTheDocument();
 });
 
-test("createNote should add note and save it to localStorage", () => {
+test("createNote should add note and save it to localStorage", async () => {
   render(<App />);
 
   fireEvent.change(screen.getByTestId("note-name-field"), {
@@ -44,10 +33,6 @@ test("createNote should add note and save it to localStorage", () => {
 
   fireEvent.click(screen.getByTestId("note-form-submit"));
 
-  expect(screen.getByText("New Note")).toBeInTheDocument();
-
-  const savedNotes = JSON.parse(localStorage.getItem("notes") || "[]");
-  expect(savedNotes).toEqual([
-    { name: "New Note", description: "New Description" },
-  ]);
+  expect(mockFindAll).toHaveBeenCalled();
+  expect(mockSave).toHaveBeenCalledWith({ name: 'New Note', description: 'New Description' });
 });

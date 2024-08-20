@@ -1,46 +1,38 @@
-# TDD AWS Amplify Next App - Step 9
+# TDD AWS Amplify Next App - Step 11
 
-## Refactor To Repository
+## Set Up AWS Amplify
 
-The `App` component now has two concerns. React [state management](https://en.wikipedia.org/wiki/State_management) and [persistence](<https://en.wikipedia.org/wiki/Persistence_(computer_science)>). [State management](https://en.wikipedia.org/wiki/State_management) is concerned with frontend values, where [persistence](<https://en.wikipedia.org/wiki/Persistence_(computer_science)>) is a backend concern. Persistence and data access concerns are often extracted into a [repository](https://makingloops.com/why-should-you-use-the-repository-pattern).
+We now have a fully functioning task creation application. When we showed this to our customer they provided some feedback. They would like:
 
-- Create a `noteRepository.js` file in the `src/app` directory.
-- Move all the `localForage` calls to this new file.
+- to secure this application with a user login
+- notes to show up on multiple devices
 
-```js
-import localForage from 'localforage';
+While `localStorage` provided a quick way to save notes and get valuable customer feedback, it isn't designed for secure, cross-device persistence. [Amazon Web Services](https://aws.amazon.com) does provide services that solve both of these [use cases](https://en.wikipedia.org/wiki/Use_case) and positions our React app for additional possibilities like [notifications](https://aws.amazon.com/sns), backend processing, storing note attachments, and much more. [AWS Amplify](https://aws.amazon.com/amplify) provides a set of tools that significantly simplify connection web and mobile applications to an AWS backend.
 
-export async function findAll() {
-  return localForage.getItem('notes');
-}
+- Install the [Install the Amplify CLI](https://docs.amplify.aws/cli/start/install)
+- Run `amplify init` at the root of the project
 
-export async function save(note) {
-  const notes = await localForage.getItem('notes');
-  if (notes) await localForage.setItem('notes', [...notes, note]);
-  else await localForage.setItem('notes', [note]);
-}
+```
+Project information
+| Name: tddamplifyreact
+| Environment: dev
+| Default editor: Visual Studio Code
+| App type: javascript
+| Javascript framework: react
+| Source Directory Path: src
+| Distribution Directory Path: build
+| Build Command: npm run-script build
+| Start Command: npm run-script start
+
+Select the authentication method you want to use: AWS profile
+Please choose the profile you want to use: default
 ```
 
-- Update `App.js` to use the new `NoteRepository` functions
+- This command created the `amplify/` directory which contains Amplify configuration files.
+- This command created the following resources on AWS
+  - UnauthRole AWS::IAM::Role
+  - AuthRole AWS::IAM::Role
+  - DeploymentBucket AWS::S3::Bucket
+  - amplify-tddamplifyreact-dev-12345
 
-```js
-import { findAll, save } from './NoteRepository';
-...
-const fetchNotesCallback = async () => {
-  const retrievedNotes = await findAll();
-  if (retrievedNotes) setNotes(retrievedNotes);
-  else setNotes([]);
-};
-
-const createNote = async () => {
-  const updatedNoteList = [...notes, formData];
-  setNotes(updatedNoteList);
-  await save(formData);
-};
-```
-
-- Run all of the tests.
-- Green
-- Commit
-
-[<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/009-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/011-step)
+[<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/010-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/012-step)
