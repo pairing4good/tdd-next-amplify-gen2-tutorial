@@ -26,15 +26,16 @@ export default function App() {
   const [formData, setFormData] = useState<Note>({ name: "", description: "" });
 
   const fetchNotesCallback = () => {
-    const savedNotesString = localStorage.getItem('notes');
-    const savedNotes = JSON.parse(savedNotesString);
+    const savedNotesString = localStorage.getItem("notes");
+    const savedNotes = savedNotesString ? JSON.parse(savedNotesString) : null;
 
     if (savedNotes) return setNotes(savedNotes);
-      return setNotes([]);
-    };
+    return setNotes([]);
+  };
   ...
 ```
 
+- The [conditional (ternary) operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator) takes three operands: a condition followed by a question mark (?), then an expression to execute if the condition is truthy followed by a colon (:), and finally the expression to execute if the condition is falsy. This operator is frequently used as an alternative to an if...else statement.
 - The `if` check determines if there are any saved notes in `localStorage` and sets the `notes` accordingly.
 
 - Add a callback function to `page.tsx` that will save newly created notes to `localStorage`
