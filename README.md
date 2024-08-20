@@ -45,7 +45,9 @@ test('should display one note when one notes is provided', () => {
 
 - Finally, let's add a test that verifies an exception is thrown when a list is not provided.
 
-This may seem unnecessary but it's important to test negative cases too. Tests not only provide accountability and quick feedback loops for the [application under test](https://en.wikipedia.org/wiki/System_under_test) but it also provides [living documentation](https://en.wikipedia.org/wiki/Living_document) for new and existing team members.
+This may seem unnecessary but it's important to test negative cases too. 
+
+> Tests not only provide accountability and quick feedback loops for the [application under test](https://en.wikipedia.org/wiki/System_under_test) but it also provides [living documentation](https://en.wikipedia.org/wiki/Living_document) for new and existing team members.
 
 ```js
 test('should throw an exception the note array is undefined', () => {
