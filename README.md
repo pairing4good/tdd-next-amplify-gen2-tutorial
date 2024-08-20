@@ -44,7 +44,7 @@ export default function App() {
 const createNote = () => {
   const updatedNoteList = [...notes, formData];
   setNotes(updatedNoteList);
-  const updatedNotesListString = JSON.stringify(updatedNotesList);
+  const updatedNotesListString = JSON.stringify(updatedNoteList);
   localStorage.setItem('notes', updatedNotesListString);
 };
 ```
