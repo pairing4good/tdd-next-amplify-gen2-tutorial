@@ -182,7 +182,7 @@ Timed out retrying after 4000ms: Expected to find element: [data-testid=note-for
 Timed out retrying after 4000ms: Expected to find element: [data-testid=test-name-0], but never found it.
 ```
 
-In test driven development we do the simplest thing possible to make a test go green. Once it is green then and only then do we go back and refactor it. In this case, the simplest thing that we can do is hard-code the expected values on the screen.
+> In test driven development we do the simplest thing possible to make a test go green. Once it is green then and only then do we go back and refactor it. In this case, the simplest thing that we can do is hard-code the expected values on the screen.
 
 ```js
 <input data-testid="note-name-field"/>
