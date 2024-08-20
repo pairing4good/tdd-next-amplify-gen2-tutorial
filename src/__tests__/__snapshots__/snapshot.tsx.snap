@@ -13,10 +13,12 @@ exports[`renders homepage unchanged 1`] = `
         <input
           data-testid="note-name-field"
           placeholder="Note Name"
+          value=""
         />
         <input
           data-testid="note-description-field"
           placeholder="Note Description"
+          value=""
         />
         <button
           data-testid="note-form-submit"

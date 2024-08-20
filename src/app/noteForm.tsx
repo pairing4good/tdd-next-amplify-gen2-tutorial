@@ -31,6 +31,7 @@ export default function NoteForm({
           })
         }
         placeholder="Note Name"
+        value={formData.name}
       />
       <input
         data-testid="note-description-field"
@@ -41,6 +42,7 @@ export default function NoteForm({
           })
         }
         placeholder="Note Description"
+        value={formData.description}
       />
       <button
         data-testid="note-form-submit"
