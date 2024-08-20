@@ -7,11 +7,19 @@ React creates a [single page web application](https://en.wikipedia.org/wiki/Sing
 Since Cypress tests the application in a browser, this is the most logical place to test this user expectation.
 
 ```js
-it('should load previously saved notes on browser refresh', () => {
+it("should load previously saved notes on browser refresh", () => {
+  cy.get("[data-testid=note-name-field]").type("test note 2");
+  cy.get("[data-testid=note-description-field]").type("test note description 2");
+  cy.get("[data-testid=note-form-submit]").click();
+
+
+  cy.get("[data-testid=test-name-0]").should("have.text", "test note 2");
+  cy.get("[data-testid=test-description-0]").should("have.text", "test note description 2");
+
   cy.reload();
 
-  cy.get('[data-testid=test-name-0]').should('have.text', 'test note');
-  cy.get('[data-testid=test-description-0]').should('have.text', 'test note description');
+  cy.get("[data-testid=test-name-0]").should("have.text", "test note 2");
+  cy.get("[data-testid=test-description-0]").should("have.text", "test note description 2");
 });
 ```
 
@@ -21,20 +29,21 @@ it('should load previously saved notes on browser refresh', () => {
 
 ```js
 ...
-function App() {
-  const [notes, setNotes] = useState([]);
-  const [formData, setFormData] = useState({ name: '', description: '' });
+export default function App() {
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [formData, setFormData] = useState<Note>({ name: "", description: "" });
 
   const fetchNotesCallback = () => {
-    const savedNotesString = localStorage.getItem('notes');
-    const savedNotes = JSON.parse(savedNotesString);
+    const savedNotesString = localStorage.getItem("notes");
+    const savedNotes = savedNotesString ? JSON.parse(savedNotesString) : null;
 
     if (savedNotes) return setNotes(savedNotes);
-      return setNotes([]);
-    };
+    return setNotes([]);
+  };
   ...
 ```
 
+- The [conditional (ternary) operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator) takes three operands: a condition followed by a question mark (?), then an expression to execute if the condition is truthy followed by a colon (:), and finally the expression to execute if the condition is falsy. This operator is frequently used as an alternative to an if...else statement.
 - The `if` check determines if there are any saved notes in `localStorage` and sets the `notes` accordingly.
 
 - Add a callback function to `page.tsx` that will save newly created notes to `localStorage`
@@ -43,7 +52,7 @@ function App() {
 const createNote = () => {
   const updatedNoteList = [...notes, formData];
   setNotes(updatedNoteList);
-  const updatedNotesListString = JSON.stringify(updatedNotesList);
+  const updatedNotesListString = JSON.stringify(updatedNoteList);
   localStorage.setItem('notes', updatedNotesListString);
 };
 ```
@@ -62,14 +71,21 @@ const createNote = () => {
 - To load the saved notes when the application is loaded, add the [useEffect](https://reactjs.org/docs/hooks-effect.html#example-using-hooks) hook and call the `fetchNotesCallback` in `page.tsx`.
 
 ```js
-import React, { useState, useEffect } from 'react';
+"use client";
+
+import React, { useState, useEffect } from "react";
 ...
-useEffect(() => {
-  fetchNotesCallback();
-}, []);
+export default function App() {
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [formData, setFormData] = useState<Note>({ name: "", description: "" });
+
+  useEffect(() => {
+    fetchNotesCallback();
+  }, []);
+...
 ```
 
-- Lastly, make sure you clean up the persisted notes after the Cypress test is run.
+- Lastly, make sure you clean up the persisted notes after the Cypress test is run.  The [after hook](https://docs.cypress.io/guides/core-concepts/writing-and-organizing-tests#Hooks) runs once after all fo the tests have been run.
 
 ```js
 after(() => {
