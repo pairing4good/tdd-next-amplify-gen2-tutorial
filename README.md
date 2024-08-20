@@ -63,11 +63,18 @@ const createNote = () => {
 - To load the saved notes when the application is loaded, add the [useEffect](https://reactjs.org/docs/hooks-effect.html#example-using-hooks) hook and call the `fetchNotesCallback` in `page.tsx`.
 
 ```js
-import React, { useState, useEffect } from 'react';
+"use client";
+
+import React, { useState, useEffect } from "react";
 ...
-useEffect(() => {
-  fetchNotesCallback();
-}, []);
+export default function App() {
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [formData, setFormData] = useState<Note>({ name: "", description: "" });
+
+  useEffect(() => {
+    fetchNotesCallback();
+  }, []);
+...
 ```
 
 - Lastly, make sure you clean up the persisted notes after the Cypress test is run.
