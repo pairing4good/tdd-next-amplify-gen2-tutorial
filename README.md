@@ -7,32 +7,27 @@
 - Add the following just under the imports in the `src/app/layout.tsx` file
 
 ```js
-...
+import Header from "./header";
 import { Amplify } from "aws-amplify";
 import outputs from "../../amplify_outputs.json";
-
-Amplify.configure(outputs);
-```
-
-- Add the following to the `App` component
-
-```js
-"use client";
-
 import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
-...
 
-export default function App() {
-  ...
+Amplify.configure(outputs);
 
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <Authenticator>
       {({ signOut, user }) => (
-        <>
-          <button onClick={signOut}>Sign out</button>
-          ...
-        </>
+        <html lang="en">
+          <body>
+            <button onClick={signOut}>Sign out</button>
+            <Header />
+            <main>{children}</main>
+          </body>
+        </html>
       )}
     </Authenticator>
   );
