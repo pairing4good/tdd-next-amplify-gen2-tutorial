@@ -39,6 +39,28 @@ AWS Amplify Gen 2 uses these TypeScript files to define the backend.
 - Click on the `Download amplify_outputs.json file` button
 - Once the file is downloaded, copy it to the root of your project
 
+If the deployment fails with the following message
+
+```
+2024-08-21T10:52:09.835Z [INFO]: Linting and checking validity of types ...
+2024-08-21T10:52:12.841Z [WARNING]: Failed to compile.
+2024-08-21T10:52:12.841Z [WARNING]: ./cypress.config.ts:4:21
+Type error: Parameter 'on' implicitly has an 'any' type.
+```
+
+Then update the `cypress.config.ts` file with the following
+
+```js
+export default {
+  e2e: {
+    baseUrl: 'http://localhost:3000',
+    setupNodeEvents(on: any, config: any) {
+      // implement node event listeners here
+    },
+  },
+};
+```
+
 ### Configuring your Amplify Deployment Pipeline
 - At the root of your project create an `amplify.yml` file with the following content
 
