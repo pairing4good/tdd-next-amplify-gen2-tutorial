@@ -1,3 +1,5 @@
+"use client";
+
 import Header from "./header";
 import { Amplify } from "aws-amplify";
 import outputs from "../../amplify_outputs.json";
@@ -10,16 +12,18 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <Authenticator>
-      {({ signOut, user }) => (
-        <html lang="en">
-          <body>
-            <button onClick={signOut}>Sign out</button>
-            <Header />
-            <main>{children}</main>
-          </body>
-        </html>
-      )}
-    </Authenticator>
+    <html lang="en">
+      <body>
+        <Header />
+        <Authenticator>
+          {({ signOut, user }) => (
+            <>
+              <button onClick={signOut}>Sign out</button>
+              <main>{children}</main>
+            </>
+          )}
+        </Authenticator>
+      </body>
+    </html>
   );
 }
