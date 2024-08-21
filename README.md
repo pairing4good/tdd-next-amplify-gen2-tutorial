@@ -94,26 +94,4 @@ test:
 - Click on the `Download amplify_outputs.json file` button
 - Once the file is downloaded, copy it to the root of your project
 
-If the deployment fails with the following message
-
-```
-2024-08-21T10:52:09.835Z [INFO]: Linting and checking validity of types ...
-2024-08-21T10:52:12.841Z [WARNING]: Failed to compile.
-2024-08-21T10:52:12.841Z [WARNING]: ./cypress.config.ts:4:21
-Type error: Parameter 'on' implicitly has an 'any' type.
-```
-
-Then update the `cypress.config.ts` file with the following
-
-```js
-export default {
-  e2e: {
-    baseUrl: 'http://localhost:3000',
-    setupNodeEvents(on: any, config: any) {
-      // implement node event listeners here
-    },
-  },
-};
-```
-
 [<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/010-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/012-step)
