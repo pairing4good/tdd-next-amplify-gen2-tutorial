@@ -1,9 +1,19 @@
+before(() => {
+  cy.signIn();
+});
+
 beforeEach(() => {
+  cy.restoreLocalStorage();
   cy.visit("/");
 });
 
 after(() => {
-  cy.clearLocalStorage("notes");
+  cy.clearLocalStorage();
+});
+
+afterEach(() => {
+  cy.clearLocalStorage('notes');
+  cy.saveLocalStorage();
 });
 
 describe("Note Capture", () => {
