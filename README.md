@@ -23,44 +23,6 @@ While `localStorage` provided a quick way to save notes and get valuable custome
 
 AWS Amplify Gen 2 uses these TypeScript files to define the backend.
 
-- Commit and [push](https://code.visualstudio.com/docs/sourcecontrol/intro-to-git#_pushing-and-pulling-remote-changes) your changes to your GitHub repository
-
-### Deploy your App to AWS Amplify
-- If you don't have an AWS Account, [create](https://aws.amazon.com/free/) one
-- Log into your AWS Account
-- Navigate to https://[your-region].console.aws.amazon.com/amplify/apps.  Be sure to replace `[your-region]` with your region.
-- Click the `Create new app` button
-- Click the `GitHub` button
-- Click the `Next` button and authorize your GiHub account
-- Select your repository and branch
-- Accept the default values to deploy your new app
-- One your app is deployed, click on your deployed branch
-- Click on the `Deployed backend resources` tab
-- Click on the `Download amplify_outputs.json file` button
-- Once the file is downloaded, copy it to the root of your project
-
-If the deployment fails with the following message
-
-```
-2024-08-21T10:52:09.835Z [INFO]: Linting and checking validity of types ...
-2024-08-21T10:52:12.841Z [WARNING]: Failed to compile.
-2024-08-21T10:52:12.841Z [WARNING]: ./cypress.config.ts:4:21
-Type error: Parameter 'on' implicitly has an 'any' type.
-```
-
-Then update the `cypress.config.ts` file with the following
-
-```js
-export default {
-  e2e: {
-    baseUrl: 'http://localhost:3000',
-    setupNodeEvents(on: any, config: any) {
-      // implement node event listeners here
-    },
-  },
-};
-```
-
 ### Configuring your Amplify Deployment Pipeline
 - At the root of your project create an `amplify.yml` file with the following content
 
@@ -111,6 +73,44 @@ test:
     files:
       - '**/*.png'
       - '**/*.mp4'
+```
+
+- Commit and [push](https://code.visualstudio.com/docs/sourcecontrol/intro-to-git#_pushing-and-pulling-remote-changes) your changes to your GitHub repository
+
+### Deploy your App to AWS Amplify
+- If you don't have an AWS Account, [create](https://aws.amazon.com/free/) one
+- Log into your AWS Account
+- Navigate to https://[your-region].console.aws.amazon.com/amplify/apps.  Be sure to replace `[your-region]` with your region.
+- Click the `Create new app` button
+- Click the `GitHub` button
+- Click the `Next` button and authorize your GiHub account
+- Select your repository and branch
+- Accept the default values to deploy your new app
+- One your app is deployed, click on your deployed branch
+- Click on the `Deployed backend resources` tab
+- Click on the `Download amplify_outputs.json file` button
+- Once the file is downloaded, copy it to the root of your project
+
+If the deployment fails with the following message
+
+```
+2024-08-21T10:52:09.835Z [INFO]: Linting and checking validity of types ...
+2024-08-21T10:52:12.841Z [WARNING]: Failed to compile.
+2024-08-21T10:52:12.841Z [WARNING]: ./cypress.config.ts:4:21
+Type error: Parameter 'on' implicitly has an 'any' type.
+```
+
+Then update the `cypress.config.ts` file with the following
+
+```js
+export default {
+  e2e: {
+    baseUrl: 'http://localhost:3000',
+    setupNodeEvents(on: any, config: any) {
+      // implement node event listeners here
+    },
+  },
+};
 ```
 
 [<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/010-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/012-step)
