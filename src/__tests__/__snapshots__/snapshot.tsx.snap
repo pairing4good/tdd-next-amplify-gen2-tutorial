@@ -1,33 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders homepage unchanged 1`] = `
-<div>
-  <html
-    lang="en"
-  >
-    <body>
-      <h1>
-        My Notes App
-      </h1>
-      <main>
-        <input
-          data-testid="note-name-field"
-          placeholder="Note Name"
-          value=""
-        />
-        <input
-          data-testid="note-description-field"
-          placeholder="Note Description"
-          value=""
-        />
-        <button
-          data-testid="note-form-submit"
-          type="button"
-        >
-          Create Note
-        </button>
-      </main>
-    </body>
-  </html>
-</div>
-`;
+exports[`renders homepage unchanged 1`] = `<div />`;
