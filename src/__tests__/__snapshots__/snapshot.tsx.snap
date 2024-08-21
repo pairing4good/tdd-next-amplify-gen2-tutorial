@@ -1,3 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders homepage unchanged 1`] = `<div />`;
+exports[`renders homepage unchanged 1`] = `
+<div>
+  <html
+    lang="en"
+  >
+    <body>
+      <h1>
+        My Notes App
+      </h1>
+    </body>
+  </html>
+</div>
+`;
