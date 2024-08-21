@@ -41,9 +41,9 @@ frontend:
         - npm ci
     build:
       commands:
-        - npm run test && npm run build
+        - npm run test:coverage && npm run build
   artifacts:
-    baseDirectory: dist
+    baseDirectory: .next
     files:
       - '**/*'
   cache:
@@ -58,7 +58,7 @@ test:
         - npm install -g pm2
         - npm install -g wait-on
         - npm install mocha mochawesome mochawesome-merge mochawesome-report-generator
-        - pm2 start npm -- run dev
+        - pm2 start npm -- start
         - wait-on http://localhost:3000
     test:
       commands:
@@ -74,6 +74,9 @@ test:
       - '**/*.png'
       - '**/*.mp4'
 ```
+> While we run all of the tests during the [continuious integration](https://en.wikipedia.org/wiki/Continuous_integration) build which is run through [GitHub Actions](https://docs.github.com/en/actions), the [continuious deployment](https://en.wikipedia.org/wiki/Continuous_deployment) build which is run thorugh [AWS Amplify](https://aws.amazon.com/amplify) is started before the CI build has completed.  This means that even if a CI build fails the code would be deployed to AWS Amplify.  In order to prevent this from happening, both the CI build and the CD build run the same tests.  While this may seem unnecessary and wasteful, this protects us from breaking our product with a bad code commit.
+- The `frontend > phases > build > commands` runs all of the lower level jest tests
+- The `test > phases > preTest > commands` runs the high level cypress tests
 
 - Commit and [push](https://code.visualstudio.com/docs/sourcecontrol/intro-to-git#_pushing-and-pulling-remote-changes) your changes to your GitHub repository
 
