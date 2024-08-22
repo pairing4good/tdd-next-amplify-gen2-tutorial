@@ -22,6 +22,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: echo '{}' > amplify_output.json
+    - run: echo '{}' > amplify_outputs.json
     - run: npm ci
     - run: npm run test:coverage
