@@ -16,7 +16,7 @@ it('should have an option to sign out', () => {
 - Run all the tests
 - Red
 
-- Add the following [properties](https://reactjs.org/docs/components-and-props.html) to the `App` component that come from the [Authenticator](https://ui.docs.amplify.aws/react/connected-components/authenticator#3-add-the-authenticator). Pass the `signOut` and `user` properties to the `Header` component.
+- Pass the `signOut` and `user` [properties](https://reactjs.org/docs/components-and-props.html) in the `layout.tsx` file, that come from the [Authenticator](https://ui.docs.amplify.aws/react/connected-components/authenticator#3-add-the-authenticator), to the `Header` component.
 
 ```js
 <Authenticator>
