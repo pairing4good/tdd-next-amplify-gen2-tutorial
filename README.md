@@ -123,4 +123,31 @@ afterEach(() => {
 - Green!
 - Commit
 
+### Missing Config
+The `amplify_outputs.json` that you downloaded in the last step contains senstive information.  In order to prevent this information from being committed to GitHub, this file is added to the `.gitignore` file during the Amplify set up.  As a result, the the `src/__tests__/snapshot.txt` test will fail during the GitHub CI build with the following message `Cannot find module '../../amplify_outputs.json' from 'src/app/layout.tsx'`.
+
+- In order to fix the snapshot test add the following to the `.github/workflows/node.js.yml` file
+
+```yml
+...
+jobs:
+  build:
+    ...
+    steps:
+    ...
+    - run: echo '{}' > amplify_outputs.json
+    - run: npm ci
+    - run: npm run test:coverage
+```
+- Running the `echo '{}' > amplify_outputs.json` command will create an empty json file before the tests are run so they will pass.
+
+Beyond the lower level tests, there is a larger problem with the cypress tests.  Without the actual `amplify_outputs.json` file the `cypress` GitHub Actions workflow will fail.  
+- Since we are running the cypress tests in Amplify's CD pipeline, let's remove the `.github/workflows/cypress.yml` file.  This will remove cypress testing from the GitHub CI pipeline.
+
+- Commit & Push
+- Your GitHub CI build should be Green!
+
+> ### Alternative Solution
+> If you want to set up your CI build to run cypress tests then you would need to add your `amplify_outputs.json` content to a [GitHub secret](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions) and use it in your GitHub Actions.  Instead of `echo '{}' > amplify_outputs.json` you would need to `echo '${{ secrets.YOUR_SECRET_NAME }}' > amplify_outputs.json`.  However, for this tutorial let's simply remove the cypress tests from the CI Build.
+
 [<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/011-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/013-step)
