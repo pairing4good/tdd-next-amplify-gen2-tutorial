@@ -23,11 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Header />
         <Authenticator>
           {({ signOut, user }) => (
             <>
-              <button onClick={signOut}>Sign out</button>
+              <Header />
               <main>{children}</main>
             </>
           )}
