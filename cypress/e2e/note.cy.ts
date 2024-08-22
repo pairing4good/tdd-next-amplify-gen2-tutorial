@@ -21,7 +21,7 @@ describe("Note Capture", () => {
     cy.get("[data-testid=test-name-0]").should("not.exist");
     cy.get("[data-testid=test-description-0]").should("not.exist");
 
-    cy.get("[data-testid=note-name-field]").type("test note");
+    cy.get("[data-testid=note-name-field]").should('exist').type("test note");
     cy.get("[data-testid=note-description-field]").type("test note description");
     cy.get("[data-testid=note-form-submit]").click();
 
@@ -33,7 +33,7 @@ describe("Note Capture", () => {
   });
 
   it("should load previously saved notes on browser refresh", () => {
-    cy.get("[data-testid=note-name-field]").type("test note 2");
+    cy.get("[data-testid=note-name-field]").should('exist').type("test note 2");
     cy.get("[data-testid=note-description-field]").type("test note description 2");
     cy.get("[data-testid=note-form-submit]").click();
   
