@@ -66,20 +66,21 @@ Amplify.configure(outputs);
 
 Cypress.Commands.add('signIn', () => { 
     const username = "pairing4good@gmail.com";
+    const password = "Pairing4good@"
     const userPoolClientId = outputs.auth.user_pool_client_id;
-    signIn({username, password: "Pairing4good@"})
+    const keyPrefix = `CognitoIdentityServiceProvider.${userPoolClientId}`;
+    
+    cy.wrap(signIn({ username, password}))
         .then((_signInOutput) => fetchAuthSession())
         .then((authSession) => {
             const idToken = authSession.tokens?.idToken?.toString() || ''
             const accessToken = authSession.tokens?.accessToken.toString() || ''
-            const keyPrefix = `CognitoIdentityServiceProvider.${userPoolClientId}`;
             
             cy.setLocalStorage(`${keyPrefix}.${username}.accessToken`, accessToken);
             cy.setLocalStorage(`${keyPrefix}.${username}.idToken`, idToken);
             cy.setLocalStorage(`CognitoIdentityServiceProvider.${userPoolClientId}.LastAuthUser`, username);
-        })
-        .catch((err) => console.log(err));
-    cy.saveLocalStorage();
+            cy.saveLocalStorage();
+        });
  })
 
 declare global {
@@ -90,7 +91,11 @@ declare global {
   }
 }
 ```
+> The [asynchronous nature of Cypress](https://learn.cypress.io/cypress-fundamentals/understanding-the-asynchronous-nature-of-cypress) is "is arguably one of the most crucial Cypress concepts that you need to understand. How Cypress handles things asynchronously is often misunderstood by developers and can lead to issues and confusion later on, especially when trying to debug your tests.
 
+- [cy.wrap](https://docs.cypress.io/api/commands/wrap) is used to ensure that `signIn` is completed before running the rest of the tests.
+
+  
 - Add the following setups and teardowns to `cypress/integration/note.cy.js`
 
 ```js
