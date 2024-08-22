@@ -5,11 +5,7 @@ exports[`renders homepage unchanged 1`] = `
   <html
     lang="en"
   >
-    <body>
-      <h1>
-        My Notes App
-      </h1>
-    </body>
+    <body />
   </html>
 </div>
 `;
