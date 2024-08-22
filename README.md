@@ -143,6 +143,7 @@ jobs:
 
 Beyond the lower level tests, there is a larger problem with the cypress tests.  Without the actual `amplify_outputs.json` file the `cypress` GitHub Actions workflow will fail.  
 - Since we are running the cypress tests in Amplify's CD pipeline, let's remove the `.github/workflows/cypress.yml` file.  This will remove cypress testing from the GitHub CI pipeline.
+- Remove `![Cypress Tests](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/actions/workflows/cypress.yml/badge.svg)` from the top of the `README.md` file.
 
 - Commit & Push
 - Your GitHub CI build should be Green!
