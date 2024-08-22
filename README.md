@@ -1,149 +1,91 @@
-# TDD AWS Amplify Next App - Step 12
+# TDD AWS Amplify Next App - Step 13
 
-## Add Authentication
+## Log Out
 
-- Run `npm install @aws-amplify/ui-react`
+While users can now log into the notes application they can't log back out.
 
-- Add the following just under the imports in the `src/app/layout.tsx` file
+- Add a Cypress test that will drive the production code changes
 
 ```js
-...
-import { Amplify } from "aws-amplify";
-import outputs from "../../amplify_outputs.json";
-
-Amplify.configure(outputs);
+it('should have an option to sign out', () => {
+  cy.get('[data-testid=sign-out]').click();
+  cy.get('[data-amplify-authenticator]').should('exist');
+});
 ```
 
-- Add the following to the `App` component
+- Run all the tests
+- Red
+
+- Add the following [properties](https://reactjs.org/docs/components-and-props.html) to the `App` component that come from the [Authenticator](https://ui.docs.amplify.aws/react/connected-components/authenticator#3-add-the-authenticator). Pass the `signOut` and `user` properties to the `Header` component.
 
 ```js
-"use client";
+<Authenticator>
+  {({ signOut, user }) => (
+    <div className="App">
+      <Header signOut={signOut} user={user} />
+      ...
+    </div>
+  )}
+</Authenticator>
+```
 
-import { Authenticator } from "@aws-amplify/ui-react";
-import "@aws-amplify/ui-react/styles.css";
-...
+- Test drive the `header.js` component by adding the following to the `src/__test__/app/header.test.js` file
 
-export default function App() {
-  ...
+```js
+import { render, screen } from '@testing-library/react';
+import Header from '../../app/header';
+
+const signOut = jest.fn();
+const user = { username: 'testUserName' };
+
+beforeEach(() => {
+  render(<Header signOut={signOut} user={user} />);
+});
+
+test('should display header', () => {
+  const heading = screen.getByRole('heading', { level: 1 });
+  expect(heading).toHaveTextContent('My Notes App');
+});
+
+test('should display username', () => {
+  const greeting = screen.getByTestId('username-greeting');
+  expect(greeting).toHaveTextContent('Hello testUserName');
+});
+
+test('should display sign out', () => {
+  const signOutButton = screen.getByTestId('sign-out');
+  expect(signOutButton).toHaveTextContent('Sign out');
+});
+```
+
+- Add the following to the `header.js` component
+
+```js
+interface Parameters {
+  signOut: ((data?: AuthEventData) => void);
+  user: AuthUser;
+}
+
+export default function Header({
+  signOut, user
+}: Parameters) {
 
   return (
-    <Authenticator>
-      {({ signOut, user }) => (
-        <>
-          <button onClick={signOut}>Sign out</button>
-          ...
-        </>
-      )}
-    </Authenticator>
+    <div>
+      <div>
+        <span data-testid="username-greeting">Hello {user.username} &nbsp;</span>
+        <button data-testid="sign-out" type="button" onClick={signOut}>
+          Sign out
+        </button>
+      </div>
+      <h1>My Notes App</h1>
+    </div>
   );
 }
 ```
 
-- Run `npm run dev`
-
-- Open http://localhost:3000
-- Click the `Create account` link
-- Create and Verify your new account
-- Login to your App
-
-- Run all your tests
-- While the non-UI tests pass, the Cypress tests are **Red**.
-
-### Cypress Login
-
-The Cypress tests now need to log in to the notes app.
-
-- Run `npm install cypress-localstorage-commands`
-- Add the following to the bottom of the `cypress/support/commands.js` file
-
-```js
-/* eslint-disable promise/catch-or-return */
-/* eslint-disable promise/always-return */
-
-import 'cypress-localstorage-commands';
-
-const { Auth } = require('aws-amplify');
-
-const username = Cypress.env('username');
-const password = Cypress.env('password');
-const userPoolId = Cypress.env('userPoolId');
-const clientId = Cypress.env('clientId');
-
-const awsconfig = {
-  aws_user_pools_id: userPoolId,
-  aws_user_pools_web_client_id: clientId
-};
-
-Auth.configure(awsconfig);
-
-Cypress.Commands.add('signIn', () => {
-  cy.then(() => Auth.signIn(username, password)).then((cognitoUser) => {
-    const idToken = cognitoUser.signInUserSession.idToken.jwtToken;
-    const accessToken = cognitoUser.signInUserSession.accessToken.jwtToken;
-
-    const makeKey = (name) => `CognitoIdentityServiceProvider
-        .${cognitoUser.pool.clientId}
-        .${cognitoUser.username}.${name}`;
-
-    cy.setLocalStorage(makeKey('accessToken'), accessToken);
-    cy.setLocalStorage(makeKey('idToken'), idToken);
-    cy.setLocalStorage(
-      `CognitoIdentityServiceProvider.${cognitoUser.pool.clientId}.LastAuthUser`,
-      cognitoUser.username
-    );
-  });
-  cy.saveLocalStorage();
-});
-```
-
-- Create a new file at the root of your project named `cypress.env.json` with the following content
-
-```json
-{
-  "username": "[Login username you just created]",
-  "password": "[Login password you just created]",
-  "userPoolId": "[The `aws_user_pools_id` value found in your `src/aws-exports.js`]",
-  "clientId": "[The `aws_user_pools_web_client_id` value found in your `src/aws-exports.js`]"
-}
-```
-
-- Update the `cypress.env.json` values with your own values.
-- Add the `cypress.env.json` to `.gitignore` so that it will not be committed and pushed to GitHub
-
-```
-...
-# cypress
-cypress/screenshots
-cypress/videos
-cypress.env.json
-...
-```
-
-- Add the following setups and teardowns to `cypress/integration/note.cy.js`
-
-```js
-before(() => {
-  cy.signIn();
-});
-
-after(() => {
-  cy.clearLocalStorageSnapshot();
-  cy.clearLocalStorage();
-  localForage.clear();
-});
-
-beforeEach(() => {
-  cy.restoreLocalStorage();
-  cy.visit('/');
-});
-
-afterEach(() => {
-  cy.saveLocalStorage();
-});
-```
-
-- Rerun all of your tests.
+- Run all the tests
 - Green!
 - Commit
 
-[<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/011-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/013-step)
+[<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/012-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/014-step)
