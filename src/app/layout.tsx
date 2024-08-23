@@ -17,7 +17,7 @@ export default function RootLayout({
         <Authenticator>
           {({ signOut, user }) => (
             <>
-              <Header />
+              <Header signOut={signOut} user={user} />
               <main>{children}</main>
             </>
           )}

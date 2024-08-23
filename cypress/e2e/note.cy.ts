@@ -50,4 +50,9 @@ describe("Note Capture", () => {
   it("should have header", () => {
     cy.get("h1").should("have.text", "My Notes App");
   });
+
+  it('should have an option to sign out', () => {
+    cy.get('[data-testid=sign-out]').click();
+    cy.get('[data-amplify-authenticator]').should('exist');
+  });
 });

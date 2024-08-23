@@ -1,91 +1,84 @@
 # TDD AWS Amplify Next App - Step 13
 
-## Log Out
+## Backend API
 
-While users can now log into the notes application they can't log back out.
+Now that we have user authentication hooked up, we need to add the ability for customers to get their "notes to show up on their mobile phone browser too". This means that we can't use local storage on the user's computer anymore. Instead we need to build a backend [API](https://en.wikipedia.org/wiki/API) that will store notes independently from the frontend code.
 
-- Add a Cypress test that will drive the production code changes
+- Update the contents of the `amplify/data/resource.ts` file with
 
 ```js
-it('should have an option to sign out', () => {
-  cy.get('[data-testid=sign-out]').click();
-  cy.get('[data-amplify-authenticator]').should('exist');
+...
+const schema = a.schema({
+  Note: a
+    .model({
+      name: a.string(),
+      description: a.string(),
+    })
+    .authorization((allow) => [allow.guest()]),
 });
+...
 ```
 
-- Run all the tests
-- Red
+`.authorization((allow) => [allow.guest()])` allows you to get started quickly without worrying about authorization rules. Review the [Customize your auth rules](https://docs.amplify.aws/javascript/build-a-backend/data/customize-authz/) page to setup the appropriate access control for your GraphQL API. (https://en.wikipedia.org/wiki/GraphQL)
 
-- Add the following [properties](https://reactjs.org/docs/components-and-props.html) to the `App` component that come from the [Authenticator](https://ui.docs.amplify.aws/react/connected-components/authenticator#3-add-the-authenticator). Pass the `signOut` and `user` properties to the `Header` component.
+- Commit and push you changes to GitHub to deploy your changes
 
-```js
-<Authenticator>
-  {({ signOut, user }) => (
-    <div className="App">
-      <Header signOut={signOut} user={user} />
-      ...
-    </div>
-  )}
-</Authenticator>
-```
+- If you would like to explore the backend, take a look at [Amplify Studio](https://docs.amplify.aws/nextjs/build-a-backend/data/manage-with-amplify-console/).
 
-- Test drive the `header.js` component by adding the following to the `src/__test__/app/header.test.js` file
+### Cut Over Repository To Use GraphQL
+
+Now that we have a GraphQL API that is storing our notes in a [DynamoDB](https://aws.amazon.com/dynamodb) table, we can replace `localStorage` calls with GraphQL API calls.
+
+- Replace `localStorage` calls in the `noteRepository` with GraphQL API calls
 
 ```js
-import { render, screen } from '@testing-library/react';
-import Header from '../../app/header';
+import { API } from 'aws-amplify';
+import { listNotes } from './graphql/queries';
+import { createNote as createNoteMutation } from './graphql/mutations';
 
-const signOut = jest.fn();
-const user = { username: 'testUserName' };
-
-beforeEach(() => {
-  render(<Header signOut={signOut} user={user} />);
-});
-
-test('should display header', () => {
-  const heading = screen.getByRole('heading', { level: 1 });
-  expect(heading).toHaveTextContent('My Notes App');
-});
-
-test('should display username', () => {
-  const greeting = screen.getByTestId('username-greeting');
-  expect(greeting).toHaveTextContent('Hello testUserName');
-});
-
-test('should display sign out', () => {
-  const signOutButton = screen.getByTestId('sign-out');
-  expect(signOutButton).toHaveTextContent('Sign out');
-});
-```
-
-- Add the following to the `header.js` component
-
-```js
-interface Parameters {
-  signOut: ((data?: AuthEventData) => void);
-  user: AuthUser;
+export async function findAll() {
+  const apiData = await API.graphql({ query: listNotes });
+  return apiData.data.listNotes.items;
 }
 
-export default function Header({
-  signOut, user
-}: Parameters) {
-
-  return (
-    <div>
-      <div>
-        <span data-testid="username-greeting">Hello {user.username} &nbsp;</span>
-        <button data-testid="sign-out" type="button" onClick={signOut}>
-          Sign out
-        </button>
-      </div>
-      <h1>My Notes App</h1>
-    </div>
-  );
+export async function save(note) {
+  const apiData = await API.graphql({
+    query: createNoteMutation,
+    variables: { input: note }
+  });
+  return apiData.data.createNote;
 }
 ```
 
-- Run all the tests
+- We do need to call the `save` function first in the `createNote` callback function in the `App` component because when [GraphQL](https://graphql.org/) saves a note, it generates a unique `ID` that we want to have access to in our `note` array.
+
+```js
+const createNote = async () => {
+  const newNote = await save(formData);
+  const updatedNoteList = [...notes, newNote];
+  setNotes(updatedNoteList);
+};
+```
+
+- The final place that we need to remove `localforage` is in the `note.cy.js` Cypress test. GraphQL does not provide an equivalent API endpoint to delete all of the notes so we will not be able to simply replace the `localforage.clear()` function call with a GraphQL one. In a separate commit we will add the ability to delete notes by `ID` through the UI. This is a [mutation](https://graphql.org/learn/queries/#mutations) that GraphQL provides. But for now we will just remove the clean up in the Cypress test.
+
+```js
+describe('Note Capture', () => {
+  before(() => {
+      cy.signIn();
+  });
+
+  after(() => {
+      cy.clearLocalStorageSnapshot();
+      cy.clearLocalStorage();
+  });
+  ...
+```
+
+- Finally remove `localforage` by running `npm uninstall localforage`
+
+- Rerun all of the tests
 - Green!
 - Commit
 
-[<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/012-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/014-step)
+[<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/013-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/015-step)
