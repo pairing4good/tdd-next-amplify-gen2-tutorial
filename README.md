@@ -1,84 +1,70 @@
-# TDD AWS Amplify Next App - Step 14
+# TDD AWS Amplify Next App - Step 15
 
-## Backend API
+## Add Note Deletion
 
-Now that we have user authentication hooked up, we need to add the ability for customers to get their "notes to show up on their mobile phone browser too". This means that we can't use local storage on the user's computer anymore. Instead we need to build a backend [API](https://en.wikipedia.org/wiki/API) that will store notes independently from the frontend code.
+In order to add note deletion, let's drive this from the Cypress test. This will help in cleaning up notes that were created during the UI test.
 
-- Update the contents of the `amplify/data/resource.ts` file with
+- Add a deletion test to the Cypress test
 
 ```js
-...
-const schema = a.schema({
-  Note: a
-    .model({
-      name: a.string(),
-      description: a.string(),
-    })
-    .authorization((allow) => [allow.guest()]),
+it('should delete note', () => {
+  cy.get('[data-testid=test-delete-button-0]').click();
+
+  cy.get('[data-testid=test-name-0]').should('not.exist');
+  cy.get('[data-testid=test-description-0]').should('not.exist');
 });
+
+it('should have an option to sign out', () => {
 ...
 ```
 
-`.authorization((allow) => [allow.guest()])` allows you to get started quickly without worrying about authorization rules. Review the [Customize your auth rules](https://docs.amplify.aws/javascript/build-a-backend/data/customize-authz/) page to setup the appropriate access control for your GraphQL API. (https://en.wikipedia.org/wiki/GraphQL)
+- Run the Cypress test and verify that it Fails
 
-- Commit and push you changes to GitHub to deploy your changes
-
-- If you would like to explore the backend, take a look at [Amplify Studio](https://docs.amplify.aws/nextjs/build-a-backend/data/manage-with-amplify-console/).
-
-### Cut Over Repository To Use GraphQL
-
-Now that we have a GraphQL API that is storing our notes in a [DynamoDB](https://aws.amazon.com/dynamodb) table, we can replace `localStorage` calls with GraphQL API calls.
-
-- Replace `localStorage` calls in the `noteRepository` with GraphQL API calls
+- To make it go green, add a new `deleteNote` function to the `NoteList` component
 
 ```js
-import { API } from 'aws-amplify';
-import { listNotes } from './graphql/queries';
-import { createNote as createNoteMutation } from './graphql/mutations';
-
-export async function findAll() {
-  const apiData = await API.graphql({ query: listNotes });
-  return apiData.data.listNotes.items;
-}
-
-export async function save(note) {
-  const apiData = await API.graphql({
-    query: createNoteMutation,
-    variables: { input: note }
-  });
-  return apiData.data.createNote;
-}
-```
-
-- We do need to call the `save` function first in the `createNote` callback function in the `App` component because when [GraphQL](https://graphql.org/) saves a note, it generates a unique `ID` that we want to have access to in our `note` array.
-
-```js
-const createNote = async () => {
-  const newNote = await save(formData);
-  const updatedNoteList = [...notes, newNote];
-  setNotes(updatedNoteList);
-};
-```
-
-- The final place that we need to remove `localforage` is in the `note.cy.js` Cypress test. GraphQL does not provide an equivalent API endpoint to delete all of the notes so we will not be able to simply replace the `localforage.clear()` function call with a GraphQL one. In a separate commit we will add the ability to delete notes by `ID` through the UI. This is a [mutation](https://graphql.org/learn/queries/#mutations) that GraphQL provides. But for now we will just remove the clean up in the Cypress test.
-
-```js
-describe('Note Capture', () => {
-  before(() => {
-      cy.signIn();
-  });
-
-  after(() => {
-      cy.clearLocalStorageSnapshot();
-      cy.clearLocalStorage();
-  });
+...
+export default function NoteList() {
   ...
+
+  function deleteNote(id: string) {
+    client.models.Note.delete({id})
+  }
+
+  return (
+    ...
+  );
+}
 ```
 
-- Finally remove `localforage` by running `npm uninstall localforage`
+- Add a deletion button that calls the `deleteNote` function
 
-- Rerun all of the tests
-- Green!
+```js
+...
+
+export default function NoteList() {
+  ...
+
+  return (
+    <div data-testid="note-list">
+      {notes.map((note, index) => (
+        <div key={index}>
+          ...
+          <button
+            type="button"
+            data-testid={`test-delete-button-${index}`}
+            onClick={() => deleteNote(note.id)}>
+            Delete note
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+- Run all the tests
+- Green
 - Commit
 
-[<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/013-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/015-step)
+[<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/014-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/016-step)
