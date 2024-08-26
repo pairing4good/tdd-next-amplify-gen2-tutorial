@@ -323,7 +323,7 @@ test('should reset the form after a note is saved', () => {
   - `should call setFormDataCallback with the correct description value on input change`
   - `should call setNotesCallback with updated notes array when create note button is clicked`
 
-  - Now let's replace the contents of `noteList.test.tsx` with the following
+- Now let's replace the contents of `noteList.test.tsx` with the following
 
 ```js
 import React from 'react';
