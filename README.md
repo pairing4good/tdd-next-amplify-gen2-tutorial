@@ -203,6 +203,8 @@ export default function App() {
   - `noteRepository.ts`
   - `types.ts`
   - `noteRepository.test.tsx`
+ 
+> **I love deleting code.**  This refactoring to the Amplify API deleted 39 lines of code accross 5 files.  We also deleted one of the tests.
 
 - Run your cypress tests `npm run cypress:test`
 - Green!
