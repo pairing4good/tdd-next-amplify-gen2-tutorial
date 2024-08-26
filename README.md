@@ -82,6 +82,7 @@ beforeEach(() => {
 });
 ```
 
+### Refactor Code
 - Now let's start changing the low level code.  First, make the following changes to the `NoteForm` component.
 
 ```js
