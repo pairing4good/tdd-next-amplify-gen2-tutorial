@@ -434,6 +434,8 @@ test("should render children", () => {
 ```
 
 - Update the `snapshot.tsx` test with the following
+- In this test we only see if the two child components render by asserting their test ids.
+
 ```js
 
 import RootLayout from "@/app/layout";
