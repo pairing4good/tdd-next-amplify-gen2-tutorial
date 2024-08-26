@@ -200,8 +200,11 @@ export default function App() {
 ```
 
 - The `noteRepository.ts` and `types.ts` can both be deleted because they are no longer used.
+- Run your cypress tests `npm run cypress:test`
+- Green!
 
-- Now let's update the tests
+### Update Lower Level Tests
+- Now that our code is working correctly we need to update the lower level tests to match the code.
 - Replace the content of the `noteForm.test.tsx` with the following
 
 ```js
