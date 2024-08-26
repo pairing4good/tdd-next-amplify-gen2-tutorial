@@ -36,6 +36,7 @@ export const data = defineData({
 - Added an expiration of `30` for the api key.  By setting an expiration for API keys, you limit the potential exposure of a compromised key. 
 
 - ** Commit and push you changes to GitHub to deploy your changes **
+- ** Be sure it successfully deploys before proceeding to the next step **
 
 - If you would like to explore the backend, take a look at [Amplify Studio](https://docs.amplify.aws/nextjs/build-a-backend/data/manage-with-amplify-console/).
 
