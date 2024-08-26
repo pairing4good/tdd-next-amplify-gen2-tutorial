@@ -51,6 +51,17 @@ describe("Note Capture", () => {
     cy.get("h1").should("have.text", "My Notes App");
   });
 
+  it('should delete note', () => {
+    cy.get("[data-testid=note-name-field]").type("test note 3");
+    cy.get("[data-testid=note-description-field]").type("test note description 3");
+    cy.get("[data-testid=note-form-submit]").click();
+
+    cy.get('[data-testid=test-delete-button-0]').click();
+  
+    cy.get('[data-testid=test-name-0]').should('not.exist');
+    cy.get('[data-testid=test-description-0]').should('not.exist');
+  });
+
   it('should have an option to sign out', () => {
     cy.get('[data-testid=sign-out]').click();
     cy.get('[data-amplify-authenticator]').should('exist');

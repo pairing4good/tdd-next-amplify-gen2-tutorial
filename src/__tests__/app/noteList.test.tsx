@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import NoteList from '@/app/noteList';
 import { generateClient } from 'aws-amplify/data';
 
@@ -8,12 +8,15 @@ jest.mock('aws-amplify/data', () => ({
 }));
 
 const mockSubscribe = jest.fn();
+const deleteMock = jest.fn();
+
 const mockClient = {
   models: {
     Note: {
       observeQuery: jest.fn(() => ({
         subscribe: mockSubscribe,
       })),
+      delete: deleteMock
     },
   },
 };
@@ -62,4 +65,36 @@ it('should unsubscribe on unmount', () => {
   unmount();
 
   expect(mockUnsubscribe).toHaveBeenCalled();
+});
+
+test('should call subscribe and handle data updates', () => {
+  jest.spyOn(console, 'error').mockImplementation(jest.fn());
+  
+  const testId = '1';
+  const testItems = [
+    { id: testId, name: 'Test Note 1', description: 'Description 1' },
+  ];
+
+  mockSubscribe.mockImplementation(({ next }) => {
+    next({ items: testItems });
+    return { unsubscribe: jest.fn() };
+  });
+
+  render(<NoteList />);
+
+  expect(mockSubscribe).toHaveBeenCalled();
+
+  const subscribeCallback = mockSubscribe.mock.calls[0][0];
+  expect(subscribeCallback).toHaveProperty('next');
+  
+  subscribeCallback.next({ items: testItems });
+
+  expect(screen.getByTestId('test-name-0')).toHaveTextContent('Test Note 1');
+  expect(screen.getByTestId('test-description-0')).toHaveTextContent('Description 1');
+
+  const button = screen.getByTestId('test-delete-button-0');
+
+  fireEvent.click(button);
+
+  expect(deleteMock).toHaveBeenCalledWith({"id": testId})
 });

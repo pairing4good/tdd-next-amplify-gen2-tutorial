@@ -15,12 +15,22 @@ export default function NoteList() {
     return () => sub.unsubscribe();
   }, []);
 
+  function deleteNote(id: string) {
+    client.models.Note.delete({id})
+  }
+
   return (
     <div data-testid="note-list">
       {notes.map((note, index) => (
         <div key={index}>
           <p data-testid={`test-name-${index}`}>{note.name}</p>
           <p data-testid={`test-description-${index}`}>{note.description}</p>
+          <button
+            type="button"
+            data-testid={`test-delete-button-${index}`}
+            onClick={() => deleteNote(note.id)}>
+            Delete note
+          </button>
         </div>
       ))}
     </div>
