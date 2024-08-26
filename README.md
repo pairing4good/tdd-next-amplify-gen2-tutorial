@@ -432,9 +432,9 @@ test("should render children", () => {
   expect(screen.getByTestId("note-list")).toBeInTheDocument();
 });
 ```
+- In this test we only see if the two child components render by asserting their test ids.
 
 - Update the `snapshot.tsx` test with the following
-- In this test we only see if the two child components render by asserting their test ids.
 
 ```js
 
