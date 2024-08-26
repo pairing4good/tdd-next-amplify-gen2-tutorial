@@ -1,31 +1,24 @@
-import { Note } from "./types";
+import { Schema } from "../../amplify/data/resource";
+import { generateClient } from "aws-amplify/data";
+import { useState } from "react";
 
-interface Parameters {
-  notes: Note[];
-  formData: Note;
-  setFormDataCallback: (data: Note) => void;
-  setNotesCallback: (notes: Note[]) => void;
-}
 
-export default function NoteForm({
-  notes,
-  formData,
-  setFormDataCallback,
-  setNotesCallback,
-}: Parameters) {
+export default function NoteForm() {
+  const client = generateClient<Schema>();
+  const [formData, setFormData] = useState({ name: "", description: "" });
 
   function createNote() {
     if (!formData.name || !formData.description) return;
-    setNotesCallback([...notes, formData]);
-    setFormDataCallback({ name: '', description: '' });
+    client.models.Note.create(formData);
+    setFormData({ name: '', description: '' });
   }
 
   return (
-    <>
+    <div data-testid="note-form">
       <input
         data-testid="note-name-field"
         onChange={(e) =>
-          setFormDataCallback({
+          setFormData({
             ...formData,
             name: e.target.value,
           })
@@ -36,7 +29,7 @@ export default function NoteForm({
       <input
         data-testid="note-description-field"
         onChange={(e) =>
-          setFormDataCallback({
+          setFormData({
             ...formData,
             description: e.target.value,
           })
@@ -51,6 +44,6 @@ export default function NoteForm({
       >
         Create Note
       </button>
-    </>
+    </div>
   );
 }

@@ -3,6 +3,7 @@ before(() => {
 });
 
 beforeEach(() => {
+  cy.deleteAllNotes();
   cy.restoreLocalStorage();
   cy.visit("/");
 });
@@ -12,7 +13,6 @@ after(() => {
 });
 
 afterEach(() => {
-  cy.clearLocalStorage('notes');
   cy.saveLocalStorage();
 });
 

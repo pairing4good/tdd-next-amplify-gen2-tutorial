@@ -2,8 +2,11 @@ import 'cypress-localstorage-commands';
 import { Amplify } from "aws-amplify";
 import { fetchAuthSession, signIn } from "aws-amplify/auth";
 import outputs from "../../amplify_outputs.json";
+import { Schema } from "../../amplify/data/resource"
+import { generateClient } from "aws-amplify/data";
 
 Amplify.configure(outputs);
+const client = generateClient<Schema>();
 
 
 Cypress.Commands.add('signIn', () => { 
@@ -25,10 +28,19 @@ Cypress.Commands.add('signIn', () => {
         });
  })
 
+ Cypress.Commands.add('deleteAllNotes', () => { 
+  client.models.Note.list().then( notes => {
+    notes.data.map( note => {
+      client.models.Note.delete(note);
+    })
+  })
+})
+
 declare global {
   namespace Cypress {
     interface Chainable {
-        signIn(): Chainable<void>
+        signIn(): Chainable<void>,
+        deleteAllNotes(): Chainable<void>
     }
   }
 }
