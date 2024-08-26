@@ -463,6 +463,8 @@ afterEach(() => {
 ```
 
 - Rerun all of the tests
+    - `npm run test:coverage`
+    - `npm run cypress:test`
 - Green!
 - Commit
 
