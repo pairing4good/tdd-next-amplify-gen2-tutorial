@@ -474,6 +474,6 @@ afterEach(() => {
 - Green!
 - Commit
 
-> This was a very large coding change.  The high level cypress test enabled us to make these changes courageously.  With out this high level verification of external user behavior, these changes would have been harder to make and more likely to introduce a bug.
+> This was a very large coding change.  The high level cypress test enabled us to make these changes courageously.  Without this high level verification of external user behavior, these changes would have been harder to make and more likely to introduce a bug.
 
 [<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/013-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/015-step)
