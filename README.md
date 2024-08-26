@@ -199,7 +199,11 @@ export default function App() {
 }
 ```
 
-- The `noteRepository.ts` and `types.ts` can both be deleted because they are no longer used.
+- Delete the following unused files
+  - `noteRepository.ts`
+  - `types.ts`
+  - `noteRepository.test.tsx`
+
 - Run your cypress tests `npm run cypress:test`
 - Green!
 
