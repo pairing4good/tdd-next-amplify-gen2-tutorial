@@ -1,6 +1,29 @@
 # TDD AWS Amplify Next App - Step 15
 
 ## Add Note Deletion
+The next story is `Note Deletion`.  Be sure to move it into `In Progress` once you start working on it.
+
+### Why: User Story
+
+```
+As a team member
+I want to delete a note
+So that I can remove notes I don't want anymore
+```
+
+### What: User Acceptance Criteria
+
+```
+Given a note exists
+When the note is listed
+Then the option to delete that note should be visible
+```
+
+```
+Given a note exists
+When I delete the note
+Then the note is no longer listed
+```
 
 In order to add note deletion, let's drive this from the Cypress test. This will help in cleaning up notes that were created during the UI test.
 
@@ -104,5 +127,7 @@ test('should call subscribe and handle data updates', () => {
 - Run all the tests
 - Green
 - Commit
+
+- Demonstrate this new ability to delete notes to the customer.  If they accept this story then move it to `Done`.  If they request any changes, leave it `In Progress` and keep working on it.  Once they accept the story, move it to `Done` and move the next highest story from the `Todo` column to the `In Progress` column.
 
 [<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/014-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/016-step)
