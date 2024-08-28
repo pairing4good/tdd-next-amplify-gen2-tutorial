@@ -476,4 +476,6 @@ afterEach(() => {
 
 > This was a very large coding change.  The high level cypress test enabled us to make these changes courageously.  Without this high level verification of external user behavior, these changes would have been harder to make and more likely to introduce bugs.
 
+- Move the `Capture Note` story on the Kanban board to `Done`
+
 [<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/013-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/015-step)
