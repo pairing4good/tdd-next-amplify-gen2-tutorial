@@ -477,5 +477,6 @@ afterEach(() => {
 > This was a very large coding change.  The high level cypress test enabled us to make these changes courageously.  Without this high level verification of external user behavior, these changes would have been harder to make and more likely to introduce bugs.
 
 - Move the `Capture Note` story on the Kanban board to `Done`
+> Stories flow across the Kanban board from left to right.  The provides a big and visible indicator of progress to your team and anyone that may be interested.  Stories in the `Todo` column should be prioritized with the highest customer impact at the top and less impactful stories at the bottom.  Once you complete a story and move it to `Done`, pick up the next highest priority story from the `Todo` column and move it into the `In Progress` column.
 
 [<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/013-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/015-step)
