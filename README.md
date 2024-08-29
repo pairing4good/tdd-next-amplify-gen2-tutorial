@@ -227,6 +227,91 @@ export default function NoteList() {
 ```
 - By adding `{note.imageLocation && (<StorageImage...` the image is only rendered if an `imageLocation` was saved for that note.
 
+Now let's add a low level test.
+
+- Before we write the test we need a hidden input field that will capture the path of our image so we can assert that the `setFormData` hook was called.  Add the following to the `NoteForm`.
+
+```js
+...
+
+export default function NoteForm() {
+  ...
+  return (
+    <div data-testid="note-form">
+      ...
+      <StorageManager
+          ...
+        />
+      <input
+        type="hidden"
+        data-testid="hidden-image-location"
+        value={formData.imageLocation}
+      />
+      <button
+        ...
+      >
+        Create Note
+      </button>
+    </div>
+  );
+}
+```
+
+Now let's add a test case to the `noteForm.test.tsx`
+
+```js
+...
+
+interface StorageManagerProps {
+  onUploadSuccess: (result: { key?: string }) => void;
+  path: (params: { identityId: string }) => string;
+}
+
+jest.mock('@aws-amplify/ui-react-storage', () => ({
+  StorageManager: ({ onUploadSuccess, path }: StorageManagerProps) => {
+    const simulateSuccess = () => {
+      onUploadSuccess({ key: 'mockImageKey' });
+    };
+
+    if (typeof path === 'function') {
+      var generatedPath = path({ identityId: 'testIdentityId' });
+      expect(generatedPath).toBe('images/testIdentityId/');
+    }
+
+    return <button onClick={simulateSuccess}>Simulate Upload Success</button>;
+  },
+}));
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  render(<NoteForm />);
+});
+
+...
+
+test('should update imageLocation state on file upload success', () => {
+  const nameInput = screen.getByTestId('note-name-field');
+  fireEvent.change(nameInput, {
+    target: { value: 'test name' }
+  });
+
+  const descriptionInput = screen.getByTestId('note-description-field');
+  fireEvent.change(descriptionInput, {
+    target: { value: 'test description' }
+  });
+
+  fireEvent.click(screen.getByText('Simulate Upload Success'));
+
+  expect(screen.getByTestId('hidden-image-location').value).toBe('mockImageKey');
+});
+```
+> Testing third-party components and libraries directly is usually unnecessary since their maintainers are responsible for their correctness and provide their own tests. Instead, you should focus on testing how your code interacts with these components/libraries using mocks or stubs to keep your tests simpler and more focused.
+
+- The `jest.mock('@aws-amplify/ui-react-storage'...` captures the `onUploadSuccess` and `path` parameters passed to the mock component.  
+- The `simulateSuccess` function calls the callback function that is passed to the mock component when the `<button onClick={simulateSuccess}>Simulate Upload Success</button>` button is clicked.  This fires the `handleFileSuccess` callback function in our code.
+- The `expect(screen.getByTestId('hidden-image-location').value).toBe('mockImageKey');` verifies that the callback was fired when the mock `StorageManager` button was clicked.
+- The `expect(generatedPath).toBe('images/testIdentityId/');` verifies that the path callback function was registered on the path property of the mock `StorageManager` component.
+
 - Run all the tests
 - Green
 - Commit
