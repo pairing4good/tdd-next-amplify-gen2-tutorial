@@ -189,6 +189,7 @@ export default function NoteList() {
   );
 }
 ```
+- By adding `{note.imageLocation && (<StorageImage...` the image is only rendered if an `imageLocation` was saved for that note.
 
 - Run all the tests
 - Green
