@@ -45,6 +45,41 @@ When they attempt to select more than one file
 Then they are prevented from selecting more than one file
 ```
 
+Let's drive this functionality from the high level cypress test by adding the following.
+
+- Visit https://picsum.photos/50 and download the generated image
+- Rename the image to `test-image.jpg` and place it in `cypress/fixtures` folder
+
+- Update the test named `should create a note when name and description provided` in `cypress/e2e/note.cy.ts` with the following.
+
+```js
+  it("should create a note when name and description provided", () => {
+    cy.get("[data-testid=test-name-0]").should("not.exist");
+    cy.get("[data-testid=test-description-0]").should("not.exist");
+
+    cy.get("[data-testid=note-name-field]").type("test note");
+    cy.get("[data-testid=note-description-field]").type("test note description");
+
+    cy.get('.amplify-storagemanager__dropzone')
+      .selectFile('cypress/fixtures/test-image.jpg', { action: 'drag-drop' })
+      
+    cy.contains('uploaded').should('be.visible');
+
+    cy.get("[data-testid=note-form-submit]").click();
+
+    cy.get("[data-testid=note-name-field]").should("have.value", "");
+    cy.get("[data-testid=note-description-field]").should("have.value", "");
+
+    cy.get("[data-testid=test-name-0]").should("have.text", "test note");
+    cy.get("[data-testid=test-description-0]").should("have.text", "test note description");
+    cy.get("[data-testid=note-image-0]").should("exist");
+  });
+```
+- By adding `cy.get('.amplify-storagemanager__dropzone')` the ampllif [StorageManager](https://ui.docs.amplify.aws/react/connected-components/storage/storagemanager) component drop zone is selected.
+- Then the `.selectFile('cypress/fixtures/test-image.jpg', { action: 'drag-drop' })` function drags the `test-image.jpg` to the drop zone.
+- By adding `cy.contains('uploaded').should('be.visible');` cypress will wait for the image to be uploaded.
+- By adding `cy.get("[data-testid=note-image-0]").should("exist");` cypress verifies that the image is included in the note listing
+
 - Run `npm i @aws-amplify/ui-react-storage`
 
 - Create a new folder `storage` under the `amplify` directory
@@ -174,6 +209,7 @@ export default function NoteList() {
           <p data-testid={`test-name-${index}`}>{note.name}</p>
           <p data-testid={`test-description-${index}`}>{note.description}</p>
           {note.imageLocation && (<StorageImage
+            data-testid={`note-image-${index}`}
             alt={`note image ${index}`}
             path={`${note.imageLocation}`}
           />)}
