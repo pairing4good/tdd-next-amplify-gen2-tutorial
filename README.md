@@ -175,7 +175,7 @@ export default function NoteList() {
           <p data-testid={`test-description-${index}`}>{note.description}</p>
           <StorageImage
             alt="note image ${index}"
-            path={({ identityId }) => `protected/${identityId}/{note.imageLocatio}`}
+            path={({ identityId }) => `protected/${identityId}/{note.imageLocation}`}
           />
           <button
             type="button"
