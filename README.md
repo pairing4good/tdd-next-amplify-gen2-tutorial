@@ -118,20 +118,25 @@ In order to save the path to this file we need to add an `onUploadSucces` callba
 ```js
 ...
 export default function NoteForm() {
-  const [formData, setFormData] = useState({ name: "", description: "", imageLocation: ""});
   ...
+  const [formData, setFormData] = useState({ name: "", description: "", imageLocation: ""});
+
+  function createNote() {
+    ...
+    setFormData({ name: '', description: '', imageLocation: '' });
+  }
+
   const handleFileSuccess = ({ key }: { key?: string }) => {
     if (key) {
-      setFormData(formData..., imageLocation: key);
+      setFormData({...formData, imageLocation: key});
     } 
   };
-  ...
+
   return (
-    <div data-testid="note-form">
-      ...
+    ...
       <StorageManager
           ...
-         onChange={handleChange} 
+          onUploadSuccess={handleFileSuccess} 
         />
       ...
     </div>
