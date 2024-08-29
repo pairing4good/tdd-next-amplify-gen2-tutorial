@@ -92,7 +92,7 @@ export default function NoteForm() {
       ...
       <StorageManager
           acceptedFileTypes={['image/*']}
-          path={({ identityId }) => `protected/${identityId}/`}
+          path={({ identityId }) => `images/${identityId}/`}
           maxFileCount={1}
           maxFileSize={500000}
           isResumable
@@ -108,7 +108,7 @@ export default function NoteForm() {
   );
 }
 ```
-- By adding the `path={({ identityId }) => `protected/${identityId}/`}` callback the storage manager will upload an image to [private or protected S3 bucket](https://ui.docs.amplify.aws/react/connected-components/storage/storagemanager#private-or-protected-buckets)
+- By adding the `path={({ identityId }) => `images/${identityId}/`}` callback the storage manager will upload an image to [private S3 bucket](https://ui.docs.amplify.aws/react/connected-components/storage/storagemanager#private-or-protected-buckets)
 - By adding `acceptedFileTypes={['image/*']}` only images file types can be uploaded.  This helps prevent uploading files that are not able to be displayed as an image.
 - By adding `maxFileCount={1}` the number of uploaded files are limited to one
 - By adding `maxFileSize={500000}` the file size is limited to 500KB.  This is critical for preventing costly mistakes or even attacks.
@@ -173,10 +173,10 @@ export default function NoteList() {
         <div key={index}>
           <p data-testid={`test-name-${index}`}>{note.name}</p>
           <p data-testid={`test-description-${index}`}>{note.description}</p>
-          <StorageImage
-            alt="note image ${index}"
-            path={({ identityId }) => `protected/${identityId}/{note.imageLocation}`}
-          />
+          {note.imageLocation && (<StorageImage
+            alt={`note image ${index}`}
+            path={`${note.imageLocation}`}
+          />)}
           <button
             type="button"
             data-testid={`test-delete-button-${index}`}
