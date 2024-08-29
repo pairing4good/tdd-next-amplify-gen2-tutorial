@@ -1,17 +1,25 @@
 import { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { useState } from "react";
+import { StorageManager } from '@aws-amplify/ui-react-storage';
+import "@aws-amplify/ui-react/styles.css";
 
 
 export default function NoteForm() {
   const client = generateClient<Schema>();
-  const [formData, setFormData] = useState({ name: "", description: "" });
+  const [formData, setFormData] = useState({ name: "", description: "", imageLocation: ""});
 
   function createNote() {
     if (!formData.name || !formData.description) return;
     client.models.Note.create(formData);
-    setFormData({ name: '', description: '' });
+    setFormData({ name: '', description: '', imageLocation: '' });
   }
+
+  const handleFileSuccess = ({ key }: { key?: string }) => {
+    if (key) {
+      setFormData({...formData, imageLocation: key});
+    } 
+  };
 
   return (
     <div data-testid="note-form">
@@ -37,6 +45,14 @@ export default function NoteForm() {
         placeholder="Note Description"
         value={formData.description}
       />
+      <StorageManager
+          acceptedFileTypes={['image/*']}
+          path={({ identityId }) => `protected/${identityId}/`}
+          maxFileCount={1}
+          maxFileSize={500000}
+          isResumable
+          onUploadSuccess={handleFileSuccess} 
+        />
       <button
         data-testid="note-form-submit"
         type="button"

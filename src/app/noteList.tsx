@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
+import { StorageImage } from '@aws-amplify/ui-react-storage';
 
 export default function NoteList() {
   const [notes, setNotes] = useState<Array<Schema["Note"]["type"]>>([]);
@@ -25,6 +26,10 @@ export default function NoteList() {
         <div key={index}>
           <p data-testid={`test-name-${index}`}>{note.name}</p>
           <p data-testid={`test-description-${index}`}>{note.description}</p>
+          <StorageImage
+            alt="note image ${index}"
+            path={({ identityId }) => `protected/${identityId}/{note.imageLocation}`}
+          />
           <button
             type="button"
             data-testid={`test-delete-button-${index}`}
