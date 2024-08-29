@@ -26,10 +26,11 @@ export default function NoteList() {
         <div key={index}>
           <p data-testid={`test-name-${index}`}>{note.name}</p>
           <p data-testid={`test-description-${index}`}>{note.description}</p>
-          <StorageImage
-            alt="note image ${index}"
-            path={({ identityId }) => `protected/${identityId}/{note.imageLocation}`}
-          />
+          {note.imageLocation && (<StorageImage
+            data-testid={`note-image-${index}`}
+            alt={`note image ${index}`}
+            path={`${note.imageLocation}`}
+          />)}
           <button
             type="button"
             data-testid={`test-delete-button-${index}`}

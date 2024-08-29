@@ -23,6 +23,12 @@ describe("Note Capture", () => {
 
     cy.get("[data-testid=note-name-field]").type("test note");
     cy.get("[data-testid=note-description-field]").type("test note description");
+
+    cy.get('.amplify-storagemanager__dropzone')
+      .selectFile('cypress/fixtures/test-image.jpg', { action: 'drag-drop' })
+      
+    cy.contains('uploaded').should('be.visible');
+
     cy.get("[data-testid=note-form-submit]").click();
 
     cy.get("[data-testid=note-name-field]").should("have.value", "");
@@ -30,6 +36,7 @@ describe("Note Capture", () => {
 
     cy.get("[data-testid=test-name-0]").should("have.text", "test note");
     cy.get("[data-testid=test-description-0]").should("have.text", "test note description");
+    cy.get("[data-testid=note-image-0]").should("exist");
   });
 
   it("should load previously saved notes on browser refresh", () => {

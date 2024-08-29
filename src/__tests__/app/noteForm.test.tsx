@@ -12,6 +12,26 @@ jest.mock('aws-amplify/data', () => ({
       }))
     }));
 
+interface StorageManagerProps {
+  onUploadSuccess: (result: { key?: string }) => void;
+  path: (params: { identityId: string }) => string;
+}
+
+jest.mock('@aws-amplify/ui-react-storage', () => ({
+  StorageManager: ({ onUploadSuccess, path }: StorageManagerProps) => {
+    const simulateSuccess = () => {
+      onUploadSuccess({ key: 'mockImageKey' });
+    };
+
+    if (typeof path === 'function') {
+      var generatedPath = path({ identityId: 'testIdentityId' });
+      expect(generatedPath).toBe('images/testIdentityId/');
+    }
+
+    return <button onClick={simulateSuccess}>Simulate Upload Success</button>;
+  },
+}));
+
 beforeEach(() => {
   jest.clearAllMocks();
   render(<NoteForm />);
@@ -104,4 +124,20 @@ test('should reset the form after a note is saved', () => {
 
   expect(nameInput).toHaveValue('');
   expect(descriptionInput).toHaveValue('');
+});
+
+test('should update imageLocation state on file upload success', () => {
+  const nameInput = screen.getByTestId('note-name-field');
+  fireEvent.change(nameInput, {
+    target: { value: 'test name' }
+  });
+
+  const descriptionInput = screen.getByTestId('note-description-field');
+  fireEvent.change(descriptionInput, {
+    target: { value: 'test description' }
+  });
+
+  fireEvent.click(screen.getByText('Simulate Upload Success'));
+
+  expect(screen.getByTestId('hidden-image-location').value).toBe('mockImageKey');
 });

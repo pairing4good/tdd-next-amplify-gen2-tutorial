@@ -47,12 +47,17 @@ export default function NoteForm() {
       />
       <StorageManager
           acceptedFileTypes={['image/*']}
-          path={({ identityId }) => `protected/${identityId}/`}
+          path={({ identityId }) => `images/${identityId}/`}
           maxFileCount={1}
           maxFileSize={500000}
           isResumable
           onUploadSuccess={handleFileSuccess} 
         />
+      <input
+        type="hidden"
+        data-testid="hidden-image-location"
+        value={formData.imageLocation}
+      />
       <button
         data-testid="note-form-submit"
         type="button"
