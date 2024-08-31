@@ -23,10 +23,7 @@ jest.mock('@aws-amplify/ui-react-storage', () => ({
       onUploadSuccess({ key: 'mockImageKey' });
     };
 
-    if (typeof path === 'function') {
-      var generatedPath = path({ identityId: 'testIdentityId' });
-      expect(generatedPath).toBe('images/testIdentityId/');
-    }
+    expect(path).toBe('images/');
 
     return <button onClick={simulateSuccess}>Simulate Upload Success</button>;
   },
