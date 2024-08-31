@@ -127,7 +127,7 @@ export default function NoteForm() {
       ...
       <StorageManager
           acceptedFileTypes={['image/*']}
-          path='images'
+          path='images/'
           maxFileCount={1}
           maxFileSize={500000}
           isResumable
