@@ -127,7 +127,7 @@ export default function NoteForm() {
       ...
       <StorageManager
           acceptedFileTypes={['image/*']}
-          path={({ identityId }) => `images/${identityId}/`}
+          path='images'
           maxFileCount={1}
           maxFileSize={500000}
           isResumable
@@ -143,7 +143,6 @@ export default function NoteForm() {
   );
 }
 ```
-- By adding the `path={({ identityId }) => `images/${identityId}/`}` callback the storage manager will upload an image to [private S3 bucket](https://ui.docs.amplify.aws/react/connected-components/storage/storagemanager#private-or-protected-buckets)
 - By adding `acceptedFileTypes={['image/*']}` only images file types can be uploaded.  This helps prevent uploading files that are not able to be displayed as an image.
 - By adding `maxFileCount={1}` the number of uploaded files are limited to one
 - By adding `maxFileSize={500000}` the file size is limited to 500KB.  This is critical for preventing costly mistakes or even attacks.
