@@ -272,10 +272,7 @@ jest.mock('@aws-amplify/ui-react-storage', () => ({
       onUploadSuccess({ key: 'mockImageKey' });
     };
 
-    if (typeof path === 'function') {
-      var generatedPath = path({ identityId: 'testIdentityId' });
-      expect(generatedPath).toBe('images/testIdentityId/');
-    }
+    expect(path).toBe('images/');
 
     return <button onClick={simulateSuccess}>Simulate Upload Success</button>;
   },
@@ -309,7 +306,6 @@ test('should update imageLocation state on file upload success', () => {
 - The `jest.mock('@aws-amplify/ui-react-storage'...` captures the `onUploadSuccess` and `path` parameters passed to the mock component.  
 - The `simulateSuccess` function calls the callback function that is passed to the mock component when the `<button onClick={simulateSuccess}>Simulate Upload Success</button>` button is clicked.  This fires the `handleFileSuccess` callback function in our code.
 - The `expect(screen.getByTestId('hidden-image-location').value).toBe('mockImageKey');` verifies that the callback was fired when the mock `StorageManager` button was clicked.
-- The `expect(generatedPath).toBe('images/testIdentityId/');` verifies that the path callback function was registered on the path property of the mock `StorageManager` component.
 
 - Run all the tests
 - Green
