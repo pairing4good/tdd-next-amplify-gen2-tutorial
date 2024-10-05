@@ -25,12 +25,6 @@ When the note fails to delete
 Then do not delete the associated image
 ```
 
-```
-Given a note exists with an image
-When the note is deleted successfully
-Then no image is deleted
-```
-
 
 
 [<kbd> Previous Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/016-step)&ensp;&ensp;&ensp;&ensp;[<kbd> Next Step </kbd>](https://github.com/pairing4good/tdd-next-amplify-gen2-tutorial/tree/018-step)
