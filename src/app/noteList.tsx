@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { StorageImage } from '@aws-amplify/ui-react-storage';
+import { remove } from 'aws-amplify/storage';
 
 export default function NoteList() {
   const [notes, setNotes] = useState<Array<Schema["Note"]["type"]>>([]);
@@ -17,7 +18,14 @@ export default function NoteList() {
   }, []);
 
   function deleteNote(id: string) {
-    client.models.Note.delete({id})
+    client.models.Note.delete({id}).then( (note) => {
+      const imageLocation = note.data?.imageLocation;
+      if (imageLocation) {
+        remove({ path: imageLocation });
+      }
+    }).catch((error) => {
+      console.error('Error deleting note:', error)
+    })
   }
 
   return (
