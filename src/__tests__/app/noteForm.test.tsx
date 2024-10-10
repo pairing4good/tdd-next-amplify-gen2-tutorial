@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import NoteForm from '@/app/noteForm';
+import isValidNote from '../../app/validation/noteValidator';
 
 const createMock = jest.fn();
 jest.mock('aws-amplify/data', () => ({
@@ -29,8 +30,11 @@ jest.mock('@aws-amplify/ui-react-storage', () => ({
   },
 }));
 
+jest.mock('../../app/validation/noteValidator', () => jest.fn());
+
 beforeEach(() => {
   jest.clearAllMocks();
+  (isValidNote as jest.Mock).mockReturnValue(true);
   render(<NoteForm />);
 });
 
@@ -52,51 +56,16 @@ test('should display the description placeholder', () => {
   expect(input).toHaveAttribute('placeholder', 'Note Description');
 });
 
-test('should require name and description', () => {
+test('should not save a note when it is invalid', () => {
   const button = screen.getByTestId('note-form-submit');
-
-  fireEvent.click(button);
-
-  expect(createMock.mock.calls.length).toBe(0);
-});
-
-test('should require name when description provided', () => {
-  const input = screen.getByTestId('note-description-field');
-  fireEvent.change(input, {
-    target: { value: 'test description' }
-  });
-
-  const button = screen.getByTestId('note-form-submit');
-
-  fireEvent.click(button);
-
-  expect(createMock.mock.calls.length).toBe(0);
-});
-
-test('should require description when name provided', () => {
-  const input = screen.getByTestId('note-name-field');
-  fireEvent.change(input, {
-    target: { value: 'test name' }
-  });
-
-  const button = screen.getByTestId('note-form-submit');
-
+  (isValidNote as jest.Mock).mockReturnValue(false);
+  
   fireEvent.click(button);
 
   expect(createMock.mock.calls.length).toBe(0);
 });
 
 test('should add a new note when name and description are provided', () => {
-  const nameInput = screen.getByTestId('note-name-field');
-  fireEvent.change(nameInput, {
-    target: { value: 'test name' }
-  });
-
-  const descriptionInput = screen.getByTestId('note-description-field');
-  fireEvent.change(descriptionInput, {
-    target: { value: 'test description' }
-  });
-
   const button = screen.getByTestId('note-form-submit');
 
   fireEvent.click(button);
@@ -124,16 +93,6 @@ test('should reset the form after a note is saved', () => {
 });
 
 test('should update imageLocation state on file upload success', () => {
-  const nameInput = screen.getByTestId('note-name-field');
-  fireEvent.change(nameInput, {
-    target: { value: 'test name' }
-  });
-
-  const descriptionInput = screen.getByTestId('note-description-field');
-  fireEvent.change(descriptionInput, {
-    target: { value: 'test description' }
-  });
-
   fireEvent.click(screen.getByText('Simulate Upload Success'));
 
   expect(screen.getByTestId('hidden-image-location').value).toBe('mockImageKey');

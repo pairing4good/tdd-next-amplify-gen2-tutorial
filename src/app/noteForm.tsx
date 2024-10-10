@@ -3,6 +3,7 @@ import { generateClient } from "aws-amplify/data";
 import { useState } from "react";
 import { StorageManager } from '@aws-amplify/ui-react-storage';
 import "@aws-amplify/ui-react/styles.css";
+import isValidNote from "./validation/noteValidator";
 
 
 export default function NoteForm() {
@@ -10,7 +11,7 @@ export default function NoteForm() {
   const [formData, setFormData] = useState({ name: "", description: "", imageLocation: ""});
 
   function createNote() {
-    if (!formData.name || !formData.description) return;
+    if (!isValidNote(formData)) return;
     client.models.Note.create(formData);
     setFormData({ name: '', description: '', imageLocation: '' });
   }
