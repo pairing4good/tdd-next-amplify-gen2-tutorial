@@ -175,7 +175,6 @@ test('should not call remove when delete function fails', async () => {
 });
 
 ```
-
 - Run all the tests and these new test cases fail.  Now let's add the code needed to make these pass
 
 ```js
@@ -199,6 +198,8 @@ export default function NoteList() {
   ...
 }
 ```
+- In order to ensure that a note image is only deleted once the note is successfully deleted we used [chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises#chaining).  The function named [then](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then) registers a [callback](https://en.wikipedia.org/wiki/Callback_(computer_programming)) function that will be called [asynchronously](https://en.wikipedia.org/wiki/Asynchrony_(computer_programming)) once a note is successfully deleted.
+- In the test we are using the [waitFor](https://testing-library.com/docs/dom-testing-library/api-async/#waitfor) from the [React Testing Library](https://testing-library.com/) to wait for this [asynchronous](https://en.wikipedia.org/wiki/Asynchrony_(computer_programming)) [callback](https://en.wikipedia.org/wiki/Callback_(computer_programming)) to the `remove` function.  Without `waitFor` the test will complete all of its checks before the callback is run.  This would result in unexpected test results.
 
 - Run all the tests
 
