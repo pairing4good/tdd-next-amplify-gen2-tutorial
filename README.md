@@ -152,9 +152,8 @@ export const handler: S3Handler = async (event) => {
 
 - Commit
 
-- In order to demonstrate this story to your customer you will need to create a note with an image and delete the note.  Then you will need to go to this new Lambda function's logs.  These logs are found in [CloudWatch]().  The easiest way to navigate to specific logs for your function is through the [AWS Amplify console]().  Once you've opened the console navigate to your deployed application and select `Functions` from the left navigation bar.  
-
-<img src="https://docs.amplify.aws/images/gen2/getting-started/react/nextImageExportOptimizer/amplify-outputs-download-opt-1920.WEBP" alt="AWS Amplify Console" style="max-width:700px;"/>
+- In order to demonstrate this story to your customer you will need to create a note with an image and delete the note.  Then you will need to go to this new Lambda function's logs.
+![AWS Amplify Console](./tutorial/AmplifyFunctionLogs.gif)
 
 Demonstrate this to the customer. If they accept this story then move it to Done.
 
